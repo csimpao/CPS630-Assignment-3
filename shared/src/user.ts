@@ -10,7 +10,7 @@ export interface User {
 // TODO: Add this
 export interface UserCreateParams {}
 
-export interface UserUpdateBalanceParams {
+export interface UserAddBalanceParams {
   userId: User['userId'];
-  balanceInCents: User['balanceInCents'];
+  addedBalanceInCents: User['balanceInCents'];
 }
