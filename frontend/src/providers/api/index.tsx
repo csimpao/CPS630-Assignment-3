@@ -1,0 +1,51 @@
+import {
+  createContext,
+  useContext,
+  useMemo,
+  type PropsWithChildren,
+} from 'react';
+import type { ApiProvider } from '../../types/api';
+import type { Bid } from '@auction-platform/shared';
+import type { RestApi } from './rest';
+import type { SocketApi } from './useSocketApi';
+
+const ApiContext = createContext<ApiProvider | null>(null);
+
+interface ApiContextProvider extends PropsWithChildren {
+  restApi: RestApi;
+  socketApi: SocketApi;
+}
+export default function ApiContextProvider({
+  children,
+  restApi,
+  socketApi,
+}: ApiContextProvider) {
+  const relevantBids: Bid[] = [];
+  const currentAuctionId = null;
+  const currentAuction = null;
+  const isSocketConnected = false;
+
+  const values = useMemo<ApiProvider>(
+    () => ({
+      api: {
+        ...restApi,
+        ...socketApi,
+      },
+      relevantBids,
+      currentAuctionId,
+      currentAuction,
+      isSocketConnected,
+    }),
+    [],
+  );
+  return <ApiContext value={values}>{children}</ApiContext>;
+}
+
+export function useApi() {
+  const context = useContext(ApiContext);
+
+  if (!context) {
+    throw new Error('useApi must be used within an ApiProvider');
+  }
+  return context;
+}
