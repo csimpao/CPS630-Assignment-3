@@ -34,7 +34,6 @@ export interface UserService {
    * @returns The user's information
    */
   getUser: (userId: User['userId']) => Promise<User>;
-  getUserAuctions: (userId: User['userId']) => Promise<Auction[]>;
 }
 
 /**
