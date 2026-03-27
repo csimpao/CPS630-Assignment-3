@@ -7,6 +7,7 @@ import type {
   User,
   UserCreateParams,
   UserAddBalanceParams,
+  AuctionWithBids,
 } from '@auction-platform/shared';
 
 /**
@@ -53,7 +54,14 @@ export interface AuctionService {
    * @param params Search filters
    * @returns An array of auctions matching the search parameters
    */
-  getAuctions: (params: AuctionSearchParams) => Promise<Auction[]>;
+  searchAuctions: (params: AuctionSearchParams) => Promise<Auction[]>;
+
+  /**
+   * Retrieves the specified auction
+   * @param auctionId The auctionId
+   * @returns The specified auction
+   */
+  getAuction: (auctionId: Auction['auctionId']) => Promise<AuctionWithBids>;
 
   /**
    * Finalizes an auction once its end time has passed. This involves

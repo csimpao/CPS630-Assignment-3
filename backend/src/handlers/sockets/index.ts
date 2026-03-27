@@ -16,5 +16,4 @@ export function socketApi(
     console.log('socket connected');
     socket.emit('test', 'sample text');
   });
-  io.on('reconnect', (socket) => {});
 }

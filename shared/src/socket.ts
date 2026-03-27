@@ -3,6 +3,7 @@ import {
   AuctionJoinParams,
   AuctionJoinResponse,
   AuctionLeaveResponse,
+  AuctionWithBids,
 } from './auction';
 import { Bid, BidCreationParams, BidCreationResponse } from './bid';
 
@@ -32,5 +33,5 @@ export interface ClientToServerEvents {
 
 export interface ServerToClientEvents {
   receiveBidOnAction: (bid: Bid) => void;
-  endAuction: (auction: Auction, bids: Bid[]) => void;
+  endAuction: (auction: AuctionWithBids) => void;
 }
