@@ -1,9 +1,10 @@
 import {
+  Auction,
   AuctionJoinParams,
   AuctionJoinResponse,
   AuctionLeaveResponse,
 } from './auction';
-import { BidCreationParams, BidCreationResponse } from './bid';
+import { Bid, BidCreationParams, BidCreationResponse } from './bid';
 
 export type Dto<T> =
   | {
@@ -18,13 +19,18 @@ export type Dto<T> =
     };
 
 export interface ClientToServerEvents {
-  bidOnAction: (params: BidCreationParams) => void;
-  joinAuction: (params: AuctionJoinParams) => void;
-  leaveAuction: () => void;
+  bidOnAction: (
+    params: BidCreationParams,
+    cb: (response: BidCreationResponse) => void,
+  ) => void;
+  joinAuction: (
+    params: AuctionJoinParams,
+    cb: (response: AuctionJoinResponse) => void,
+  ) => void;
+  leaveAuction: (cb: (response: AuctionLeaveResponse) => void) => void;
 }
 
 export interface ServerToClientEvents {
-  bidOnAction: (response: BidCreationResponse) => void;
-  joinAuction: (response: AuctionJoinResponse) => void;
-  leaveAuction: (response: AuctionLeaveResponse) => void;
+  receiveBidOnAction: (bid: Bid) => void;
+  endAuction: (auction: Auction, bids: Bid[]) => void;
 }
