@@ -6,6 +6,7 @@ import type {
   AuctionSearchParams,
   Bid,
   BidCreationParams,
+  UserAddBalanceParams,
 } from '@auction-platform/shared';
 
 /**
@@ -23,10 +24,10 @@ export interface ApiActions {
 
   /**
    * Increases the user's account balance.
-   * @param {addedBalanceInCents} addedBalanceInCents - The amount to the add
+   * @param {UserAddBalanceParams} userAddBalanceParams - The amount to the add
    * @returns {Promise<User>} The updated User object reflecting the new balance
    */
-  addToBalance: (addedBalanceInCents: number) => Promise<User>;
+  addToBalance: (userAddBalanceParams: UserAddBalanceParams) => Promise<User>;
 
   /**
    * Lists a new item for auction.

@@ -2,6 +2,10 @@ import type { Auction, Bid, BidCreationParams } from '@auction-platform/shared';
 import { useState } from 'react';
 import { Socket } from 'socket.io-client';
 import type { ApiProvider } from '../../types/api';
+import type {
+  ServerToClientEvents,
+  ClientToServerEvents,
+} from '../../../../shared/dist/socket';
 
 const ErrTimeout = new Error('Server did not respond in time');
 
@@ -13,7 +17,9 @@ export interface UseSocketApiReturn {
   socketApi: SocketApi;
 }
 
-export const useSocketApi = (socket: Socket): UseSocketApiReturn => {
+export const useSocketApi = (
+  socket: Socket<ServerToClientEvents, ClientToServerEvents>,
+): UseSocketApiReturn => {
   // TODO: implement isConnected functionality
   const [isSocketConnected, _setIsSocketConnected] =
     useState<ApiProvider['isSocketConnected']>(false);
@@ -25,7 +31,7 @@ export const useSocketApi = (socket: Socket): UseSocketApiReturn => {
     [],
   );
 
-  socket.on('receiveBidOnAuction', (bid: Bid) => {
+  socket.on('receiveBidOnAction', (bid: Bid) => {
     if (bid.auctionId === currentAuctionId) {
       setRelevantBids((oldRelevantBids) => [...oldRelevantBids, bid]);
     }
@@ -50,65 +56,57 @@ export const useSocketApi = (socket: Socket): UseSocketApiReturn => {
     socketApi: {
       bidOnAuction: (params: BidCreationParams) =>
         new Promise<void>((resolve, reject) => {
-          socket
-            .timeout(5000)
-            .emit('bidOnAuction', params, (err: any, response: any) => {
-              // TODO: figure out how to type this
-              if (err) {
-                return reject(ErrTimeout);
-              }
+          socket.timeout(5000).emit('bidOnAction', params, (err, response) => {
+            if (err) {
+              return reject(ErrTimeout);
+            }
 
-              if (response && response.error) {
-                return reject(new Error(response.message));
-              }
+            if (response.status == 'error') {
+              return reject(new Error(response.error));
+            }
 
-              // TODO: check the ordering on this and the type
-              setRelevantBids((oldRelevantBids) => [
-                ...oldRelevantBids,
-                response.message,
-              ]);
-              resolve();
-            });
+            setRelevantBids((oldRelevantBids) => [
+              ...oldRelevantBids,
+              response.payload,
+            ]);
+            resolve();
+          });
         }),
       joinAuction: (auctionId: Auction['auctionId']) =>
         new Promise<void>((resolve, reject) => {
           socket
             .timeout(5000)
-            .emit('joinAuction', auctionId, (err: any, response: any) => {
-              // TODO: figure out how to type this
+            .emit('joinAuction', { auctionId }, (err, response) => {
               if (err) {
                 return reject(ErrTimeout);
               }
 
-              if (response && response.error) {
-                return reject(new Error(response.message));
+              if (response.status === 'error') {
+                return reject(new Error(response.error));
               }
 
-              setRelevantBids(response.message.bids);
-              setCurrentAuction(response.message.auction);
-              setCurrentAuctionId(response.message.auction.auctionId);
+              setRelevantBids(response.payload.bids);
+              setCurrentAuction(response.payload.auction);
+              setCurrentAuctionId(response.payload.auction.auctionId);
               resolve();
             });
         }),
       leaveAuction: () =>
         new Promise<void>((resolve, reject) => {
-          socket
-            .timeout(5000)
-            .emit('leaveAuction', (err: any, response: any) => {
-              // TODO: figure out how to type this
-              if (err) {
-                return reject(ErrTimeout);
-              }
+          socket.timeout(5000).emit('leaveAuction', (err, response) => {
+            if (err) {
+              return reject(ErrTimeout);
+            }
 
-              if (response && response.error) {
-                return reject(new Error(response.message));
-              }
+            if (response.status === 'error') {
+              return reject(new Error(response.error));
+            }
 
-              setRelevantBids([]);
-              setCurrentAuction(null);
-              setCurrentAuctionId(null);
-              resolve();
-            });
+            setRelevantBids([]);
+            setCurrentAuction(null);
+            setCurrentAuctionId(null);
+            resolve();
+          });
         }),
     },
   };

@@ -9,12 +9,13 @@ import type {
   UserService,
 } from './types/services';
 import { socketApi } from './handlers/sockets';
+import type { ClientToServerEvents } from '@todo-app/shared/socket';
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, {
+const io = new Server<ClientToServerEvents>(httpServer, {
   cors: {
     origin: 'http://localhost:5173', // TODO: configure this
     methods: ['GET', 'POST'],

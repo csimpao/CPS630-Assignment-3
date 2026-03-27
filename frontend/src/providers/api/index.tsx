@@ -7,7 +7,7 @@ import {
 import type { ApiProvider } from '../../types/api';
 import type { Bid } from '@auction-platform/shared';
 import type { RestApi } from './rest';
-import type { SocketApi, UseSocketApiReturn } from './useSocketApi';
+import type { UseSocketApiReturn } from './useSocketApi';
 
 const ApiContext = createContext<ApiProvider | null>(null);
 
