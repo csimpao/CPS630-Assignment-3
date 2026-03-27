@@ -7,13 +7,13 @@ import {
 import type { ApiProvider } from '../../types/api';
 import type { Bid } from '@auction-platform/shared';
 import type { RestApi } from './rest';
-import type { SocketApi } from './useSocketApi';
+import type { SocketApi, UseSocketApiReturn } from './useSocketApi';
 
 const ApiContext = createContext<ApiProvider | null>(null);
 
 interface ApiContextProvider extends PropsWithChildren {
   restApi: RestApi;
-  socketApi: SocketApi;
+  socketApi: UseSocketApiReturn;
 }
 export default function ApiContextProvider({
   children,
@@ -29,7 +29,7 @@ export default function ApiContextProvider({
     () => ({
       api: {
         ...restApi,
-        ...socketApi,
+        ...socketApi.socketApi,
       },
       relevantBids,
       currentAuctionId,

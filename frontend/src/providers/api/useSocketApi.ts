@@ -37,6 +37,11 @@ export const useSocketApi = (socket: Socket): UseSocketApiReturn => {
     setRelevantBids(bids);
   });
 
+  // test
+  socket.on('test', (message) => {
+    console.log('received message', message);
+  });
+
   return {
     isSocketConnected,
     currentAuctionId,
