@@ -1,4 +1,5 @@
 import { Bid } from './bid';
+import { Dto } from './socket';
 
 export interface Auction {
   auctionId: number;
@@ -26,6 +27,10 @@ export interface AuctionSearchParams {
 export interface AuctionJoinParams {
   auctionId: Auction['auctionId'];
 }
+
+export type AuctionJoinResponse = Dto<{ bids: Bid[]; auction: Auction }>;
+
+export type AuctionLeaveResponse = Dto<null>;
 
 export interface AuctionWithBids extends Auction {
   bids: Bid[];
