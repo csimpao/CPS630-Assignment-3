@@ -18,6 +18,11 @@ export default function TestPage() {
     await api.joinAuction(auctionId);
   };
 
+  const onLeaveAuction = async () => {
+    console.log('left auction');
+    await api.leaveAuction();
+  };
+
   console.log('rerendering');
 
   return (
@@ -26,8 +31,8 @@ export default function TestPage() {
       <p>isSocketConnected: {JSON.stringify(isSocketConnected)}</p>
       <p>relevantBids: {JSON.stringify(relevantBids)}</p>
       <div>
-        <label htmlFor="auctionId">Change auction</label>
         <p>currentAuction: {JSON.stringify(currentAuction)}</p>
+        <label htmlFor="auctionId">Change auction</label>
         <input
           type="text"
           name="auctionId"
@@ -37,6 +42,13 @@ export default function TestPage() {
         <button onClick={() => onChangeAuction(parseInt(auctionId))}>
           Update auctionId
         </button>
+      </div>
+
+      <hr />
+
+      <div>
+        <label htmlFor="auctionId">Leave auction</label>
+        <button onClick={() => onLeaveAuction()}>Leave auction</button>
       </div>
     </>
   );

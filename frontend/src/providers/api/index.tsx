@@ -20,7 +20,7 @@ export default function ApiContextProvider({
   restApi,
   socketApi,
 }: ApiContextProvider) {
-  const relevantBids: Bid[] = [];
+  const relevantBids: Bid[] = socketApi.relevantBids;
   const currentAuctionId = socketApi.currentAuctionId;
   const currentAuction = socketApi.currentAuction;
   const isSocketConnected = false;

@@ -10,6 +10,7 @@ import type {
   AuctionJoinResponse,
 } from '@auction-platform/shared';
 import { joinAuction } from './joinAuction';
+import { leaveAuction } from './leaveAuction';
 
 export function socketApi(
   userService: UserService,
@@ -19,5 +20,6 @@ export function socketApi(
 ) {
   io.on('connection', (socket) => {
     socket.on('joinAuction', joinAuction(socket, auctionService));
+    socket.on('leaveAuction', leaveAuction(socket));
   });
 }

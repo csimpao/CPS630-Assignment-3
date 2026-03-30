@@ -90,8 +90,9 @@ export const useSocketApi = (
                 return reject(new Error(response.error));
               }
 
-              setRelevantBids(response.payload.bids);
-              setCurrentAuction(response.payload);
+              const { bids, ...auction } = response.payload;
+              setRelevantBids(bids);
+              setCurrentAuction(auction);
               setCurrentAuctionId(response.payload.auctionId);
               resolve();
             });
