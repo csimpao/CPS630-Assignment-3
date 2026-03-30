@@ -1,4 +1,9 @@
-import type { Auction, Bid, BidCreationParams } from '@auction-platform/shared';
+import type {
+  Auction,
+  AuctionWithBids,
+  Bid,
+  BidCreationParams,
+} from '@auction-platform/shared';
 import { useState } from 'react';
 import { Socket } from 'socket.io-client';
 import type { ApiProvider } from '../../types/api';
@@ -38,9 +43,9 @@ export const useSocketApi = (
     // TODO: do we need to change the room if this is not the case?
   });
 
-  socket.on('endAuction', (auction: Auction, bids: Bid[]) => {
-    setCurrentAuction(auction);
-    setRelevantBids(bids);
+  socket.on('endAuction', (auctionWithBids: AuctionWithBids) => {
+    setCurrentAuction(auctionWithBids);
+    setRelevantBids(auctionWithBids.bids);
   });
 
   // test
@@ -86,8 +91,8 @@ export const useSocketApi = (
               }
 
               setRelevantBids(response.payload.bids);
-              setCurrentAuction(response.payload.auction);
-              setCurrentAuctionId(response.payload.auction.auctionId);
+              setCurrentAuction(response.payload);
+              setCurrentAuctionId(response.payload.auctionId);
               resolve();
             });
         }),

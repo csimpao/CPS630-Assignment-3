@@ -5,7 +5,7 @@ export interface Auction {
   auctionId: number;
   title: string;
   description: string;
-  startingPriceCents: string;
+  startingPriceCents: number;
   startTimeUtc: Date;
   endTimeUtc: Date;
   active: boolean;
@@ -28,7 +28,7 @@ export interface AuctionJoinParams {
   auctionId: Auction['auctionId'];
 }
 
-export type AuctionJoinResponse = Dto<{ bids: Bid[]; auction: Auction }>;
+export type AuctionJoinResponse = Dto<AuctionWithBids>;
 
 export type AuctionLeaveResponse = Dto<null>;
 

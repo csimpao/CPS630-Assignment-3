@@ -21,8 +21,8 @@ export default function ApiContextProvider({
   socketApi,
 }: ApiContextProvider) {
   const relevantBids: Bid[] = [];
-  const currentAuctionId = null;
-  const currentAuction = null;
+  const currentAuctionId = socketApi.currentAuctionId;
+  const currentAuction = socketApi.currentAuction;
   const isSocketConnected = false;
 
   const values = useMemo<ApiProvider>(
@@ -36,7 +36,14 @@ export default function ApiContextProvider({
       currentAuction,
       isSocketConnected,
     }),
-    [],
+    [
+      restApi,
+      socketApi,
+      relevantBids,
+      currentAuctionId,
+      currentAuction,
+      isSocketConnected,
+    ],
   );
   return <ApiContext value={values}>{children}</ApiContext>;
 }

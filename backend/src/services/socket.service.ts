@@ -1,10 +1,10 @@
 import type {
   ClientToServerEvents,
   ServerToClientEvents,
-} from '@todo-app/shared/socket';
+} from '@auction-platform/shared/socket';
 import type { AuctionService, SocketService } from '../types/services';
 import type { Server } from 'socket.io';
-import type { Auction, Bid } from '@todo-app/shared';
+import type { Auction, Bid } from '@auction-platform/shared';
 
 export class SocketIoSocketService implements SocketService {
   private io: Server<ClientToServerEvents, ServerToClientEvents>;

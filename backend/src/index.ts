@@ -9,7 +9,11 @@ import type {
   UserService,
 } from './types/services';
 import { socketApi } from './handlers/sockets';
-import type { ClientToServerEvents } from '@todo-app/shared/socket';
+import {
+  auctionWithBidsUsedCar,
+  auctionWithBidsVintageCamera,
+} from '@auction-platform/shared/fixtures';
+import type { Auction, ClientToServerEvents } from '@auction-platform/shared';
 
 const PORT = process.env.PORT || 3000;
 
@@ -24,7 +28,15 @@ const io = new Server<ClientToServerEvents>(httpServer, {
 });
 
 const userService = null as unknown as UserService;
-const auctionService = null as unknown as AuctionService;
+const auctionService = {
+  getAuction: async (auctionId: Auction['auctionId']) => {
+    if (auctionId === 101) {
+      return auctionWithBidsVintageCamera;
+    } else {
+      return auctionWithBidsUsedCar;
+    }
+  },
+} as Partial<AuctionService> as AuctionService;
 const queueService = null as unknown as QueueService;
 
 // TODO: configure this

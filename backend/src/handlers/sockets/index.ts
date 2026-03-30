@@ -4,7 +4,12 @@ import type {
   AuctionService,
   QueueService,
 } from '../../types/services';
-import type { ClientToServerEvents } from '@todo-app/shared/socket';
+import type { ClientToServerEvents } from '@auction-platform/shared/socket';
+import type {
+  AuctionJoinParams,
+  AuctionJoinResponse,
+} from '@auction-platform/shared';
+import { joinAuction } from './joinAuction';
 
 export function socketApi(
   userService: UserService,
@@ -13,7 +18,6 @@ export function socketApi(
   io: Server<ClientToServerEvents, ClientToServerEvents, DefaultEventsMap, any>,
 ) {
   io.on('connection', (socket) => {
-    console.log('socket connected');
-    socket.emit('test', 'sample text');
+    socket.on('joinAuction', joinAuction(socket, auctionService));
   });
 }
