@@ -77,10 +77,7 @@ export interface AuctionService {
    * @param params The bid amount and bidder information
    * @returns The successfully placed bid
    */
-  placeBid: (
-    auctionId: Auction['auctionId'],
-    params: BidCreationParams,
-  ) => Promise<Bid>;
+  placeBid: (params: BidCreationParams) => Promise<Bid>;
 }
 
 /**

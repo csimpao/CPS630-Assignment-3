@@ -1,4 +1,4 @@
-import type { Auction } from '@auction-platform/shared';
+import type { Auction, Bid } from '@auction-platform/shared';
 import { useApi } from '../providers/api';
 import { useState } from 'react';
 
@@ -12,6 +12,8 @@ export default function TestPage() {
   } = useApi();
 
   const [auctionId, setAuctionId] = useState<string>('');
+  const [bidAuctionId, setBidAuctionId] = useState<string>('');
+  const [bidInCents, setBidInCents] = useState<string>('');
 
   const onChangeAuction = async (auctionId: Auction['auctionId']) => {
     console.log('joined auction', auctionId);
@@ -21,6 +23,14 @@ export default function TestPage() {
   const onLeaveAuction = async () => {
     console.log('left auction');
     await api.leaveAuction();
+  };
+
+  const onPlaceBid = async (
+    auctionId: Auction['auctionId'],
+    bidInCents: Bid['bidInCents'],
+  ) => {
+    console.log('placed bid', auctionId, bidInCents);
+    await api.bidOnAuction({ auctionId, bidInCents });
   };
 
   console.log('rerendering');
@@ -49,6 +59,31 @@ export default function TestPage() {
       <div>
         <label htmlFor="auctionId">Leave auction</label>
         <button onClick={() => onLeaveAuction()}>Leave auction</button>
+      </div>
+
+      <hr />
+
+      <div>
+        <label htmlFor="bidAuctionId">Bid on auction</label>
+        <input
+          type="text"
+          name="bidAuctionId"
+          value={bidAuctionId}
+          onChange={(e) => setBidAuctionId(e.target.value)}
+        />
+        <input
+          type="text"
+          name="bidInCents"
+          value={bidInCents}
+          onChange={(e) => setBidInCents(e.target.value)}
+        />
+        <button
+          onClick={() =>
+            onPlaceBid(parseInt(bidAuctionId), parseInt(bidInCents))
+          }
+        >
+          Place bid
+        </button>
       </div>
     </>
   );

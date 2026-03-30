@@ -4,7 +4,7 @@ import type {
   Bid,
   BidCreationParams,
 } from '@auction-platform/shared';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
 import type { ApiProvider } from '../../types/api';
 import type {
@@ -36,17 +36,26 @@ export const useSocketApi = (
     [],
   );
 
-  socket.on('receiveBidOnAction', (bid: Bid) => {
-    if (bid.auctionId === currentAuctionId) {
-      setRelevantBids((oldRelevantBids) => [...oldRelevantBids, bid]);
-    }
-    // TODO: do we need to change the room if this is not the case?
-  });
+  useEffect(() => {
+    const handleReceiveBid = (bid: Bid) => {
+      if (bid.auctionId === currentAuctionId) {
+        setRelevantBids((old) => [...old, bid]);
+      }
+    };
 
-  socket.on('endAuction', (auctionWithBids: AuctionWithBids) => {
-    setCurrentAuction(auctionWithBids);
-    setRelevantBids(auctionWithBids.bids);
-  });
+    const handleEndAuction = (auctionWithBids: AuctionWithBids) => {
+      setCurrentAuction(auctionWithBids);
+      setRelevantBids(auctionWithBids.bids);
+    };
+
+    socket.on('receiveBidOnAction', handleReceiveBid);
+    socket.on('endAuction', handleEndAuction);
+
+    return () => {
+      socket.off('receiveBidOnAction', handleReceiveBid);
+      socket.off('endAuction', handleEndAuction);
+    };
+  }, [socket, currentAuctionId]); // Re-subscribe if the auction context changes
 
   // test
   socket.on('test', (message) => {
@@ -70,10 +79,6 @@ export const useSocketApi = (
               return reject(new Error(response.error));
             }
 
-            setRelevantBids((oldRelevantBids) => [
-              ...oldRelevantBids,
-              response.payload,
-            ]);
             resolve();
           });
         }),

@@ -13,7 +13,13 @@ import {
   auctionWithBidsUsedCar,
   auctionWithBidsVintageCamera,
 } from '@auction-platform/shared/fixtures';
-import type { Auction, ClientToServerEvents } from '@auction-platform/shared';
+import type {
+  Auction,
+  Bid,
+  BidCreationParams,
+  ClientToServerEvents,
+} from '@auction-platform/shared';
+import { SocketIoSocketService } from './services/socket.service';
 
 const PORT = process.env.PORT || 3000;
 
@@ -36,8 +42,26 @@ const auctionService = {
       return auctionWithBidsUsedCar;
     }
   },
+  placeBid: async (params: BidCreationParams): Promise<Bid> => {
+    const bid: Bid = {
+      bidId: 4,
+      auctionId: params.auctionId,
+      userId: 57,
+      bidInCents: params.bidInCents,
+      bidTimeUtc: new Date('2026-03-30T15:48:00Z'),
+    };
+
+    if (params.auctionId === 101) {
+      auctionWithBidsVintageCamera.bids.push(bid);
+    } else {
+      auctionWithBidsUsedCar.bids.push(bid);
+    }
+
+    return bid;
+  },
 } as Partial<AuctionService> as AuctionService;
 const queueService = null as unknown as QueueService;
+const socketService = new SocketIoSocketService(io, auctionService);
 
 // TODO: configure this
 const corsOptions = {
@@ -46,7 +70,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use('/', restApi(userService, auctionService, queueService));
-socketApi(userService, auctionService, queueService, io);
+socketApi(userService, auctionService, queueService, socketService, io);
 
 httpServer.listen(PORT, () => {
   console.log('listening on port: ', PORT);
