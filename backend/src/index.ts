@@ -34,6 +34,9 @@ const io = new Server<ClientToServerEvents>(httpServer, {
     methods: ['GET', 'POST'],
     credentials: true,
   },
+  connectionStateRecovery: {
+    maxDisconnectionDuration: 2 * 60 * 1000,
+  },
 });
 
 const userService = {
