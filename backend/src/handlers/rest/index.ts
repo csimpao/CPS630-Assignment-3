@@ -8,6 +8,12 @@ import { createAuction } from './createAuction';
 import { addBalance } from './addBalance';
 import { getUser } from './getUser';
 import { searchAuctions } from './searchAuctions';
+import { validate } from './middleware';
+import {
+  AuctionCreateSchema,
+  AuctionSearchSchema,
+  UserAddBalanceSchema,
+} from '@auction-platform/shared/schemas';
 
 export function restApi(
   userService: UserService,
@@ -16,10 +22,22 @@ export function restApi(
 ) {
   const router = Router();
 
-  router.post('/auctions', createAuction(auctionService, queueService));
-  router.patch('/me/balance', addBalance(userService));
+  router.post(
+    '/auctions',
+    validate(AuctionCreateSchema),
+    createAuction(auctionService, queueService),
+  );
+  router.patch(
+    '/me/balance',
+    validate(UserAddBalanceSchema),
+    addBalance(userService),
+  );
   router.get('/me', getUser(userService));
-  router.get('/auctions', searchAuctions(auctionService));
+  router.get(
+    '/auctions',
+    validate(AuctionSearchSchema),
+    searchAuctions(auctionService),
+  );
 
   return router;
 }

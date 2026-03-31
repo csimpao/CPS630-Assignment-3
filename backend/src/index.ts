@@ -15,11 +15,14 @@ import {
 } from '@auction-platform/shared/fixtures';
 import type {
   Auction,
+  AuctionCreateParams,
+  AuctionSearchParams,
   Bid,
   BidCreationParams,
   ClientToServerEvents,
 } from '@auction-platform/shared/domain';
 import { SocketIoSocketService } from './services/socket.service';
+import { globalErrorHandler } from './handlers/rest/middleware';
 
 const PORT = process.env.PORT || 3000;
 
@@ -33,7 +36,14 @@ const io = new Server<ClientToServerEvents>(httpServer, {
   },
 });
 
-const userService = null as unknown as UserService;
+const userService = {
+  addToUserBalance: async () => ({
+    userId: 1,
+    name: 'John Doe',
+    balanceInCents: 10000, // $100.00
+    participatedAuctions: [],
+  }),
+} as Partial<UserService> as UserService;
 const auctionService = {
   getAuction: async (auctionId: Auction['auctionId']) => {
     if (auctionId === 101) {
@@ -59,8 +69,17 @@ const auctionService = {
 
     return bid;
   },
+  createAuction: async (_params: AuctionCreateParams) => ({
+    ...auctionWithBidsVintageCamera,
+  }),
+  searchAuctions: async (params: AuctionSearchParams) => {
+    console.log(params);
+    return [auctionWithBidsUsedCar, auctionWithBidsVintageCamera];
+  },
 } as Partial<AuctionService> as AuctionService;
-const queueService = null as unknown as QueueService;
+const queueService = {
+  scheduleAuctionEnd: async () => {},
+} as Partial<QueueService> as QueueService;
 const socketService = new SocketIoSocketService(io, auctionService);
 
 // TODO: configure this
@@ -69,7 +88,9 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
+app.use(express.json());
 app.use('/', restApi(userService, auctionService, queueService));
+app.use(globalErrorHandler);
 socketApi(userService, auctionService, queueService, socketService, io);
 
 httpServer.listen(PORT, () => {
