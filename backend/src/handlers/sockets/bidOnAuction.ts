@@ -3,6 +3,8 @@ import type {
   BidCreationResponse,
 } from '@auction-platform/shared/domain';
 import type { AuctionService, SocketService } from '../../types/services';
+import { BidCreationSchema } from '@auction-platform/shared/schemas';
+import { z } from 'zod';
 
 export function bidOnAuction(
   auctionService: AuctionService,
@@ -13,34 +15,45 @@ export function bidOnAuction(
     bidInCents: number,
     cb: (response: BidCreationResponse) => void,
   ) => {
-    const params: BidCreationParams = {
-      auctionId,
-      bidInCents,
-      userId: 0, // TODO: add this with authentication
-    };
-
     try {
+      const validated = await BidCreationSchema.parseAsync({
+        auctionId,
+        bidInCents,
+      });
+
+      const params: BidCreationParams = {
+        auctionId: validated.auctionId,
+        bidInCents: validated.bidInCents,
+        userId: 0, // TODO: add this with authentication
+      };
+
       const bid = await auctionService.placeBid(params);
 
-      const response: BidCreationResponse = {
+      cb({
         status: 'ok',
         payload: bid,
         error: null,
-      };
-      cb(response);
+      });
+
       await socketService.notifyBid(params.auctionId, bid);
     } catch (err) {
-      // TODO: handle differently based upon error thrown
-      console.log(
-        `bidOnAuction: Could not place bid for params ${params}, ${err}`,
-      );
+      let errorMessage = 'Could not place bid';
 
-      const response: BidCreationResponse = {
+      if (err instanceof z.ZodError) {
+        errorMessage =
+          'Invalid input: ' +
+          err.issues.map((e) => e.path.join('.')).join(', ');
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+
+      console.error(`bidOnAuction Error: ${errorMessage}`, err);
+
+      cb({
         status: 'error',
         payload: null,
-        error: 'Could not place bid',
-      };
-      cb(response);
+        error: errorMessage,
+      });
     }
   };
 }

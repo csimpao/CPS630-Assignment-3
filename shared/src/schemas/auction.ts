@@ -14,9 +14,7 @@ export const AuctionCreateSchema = z.object({
 });
 
 export const AuctionGetSchema = z.object({
-  params: z.object({
-    auctionId: z.coerce.number().int().min(1),
-  }),
+  auctionId: z.coerce.number().int().min(1),
 });
 
 export const AuctionSearchSchema = z.object({

@@ -6,6 +6,8 @@ import type {
 import type { Socket, DefaultEventsMap } from 'socket.io';
 import type { AuctionService } from '../../types/services';
 import { getAuctionRoom } from '../../lib/getAuctionRoom';
+import { AuctionGetSchema } from '@auction-platform/shared/schemas';
+import { z } from 'zod';
 
 export function joinAuction(
   socket: Socket<
@@ -20,9 +22,12 @@ export function joinAuction(
     params: AuctionJoinParams,
     cb: (response: AuctionJoinResponse) => void,
   ) => {
-    const auctionId = params.auctionId;
-
     try {
+      const validated = await AuctionGetSchema.parseAsync({
+        auctionId: params.auctionId,
+      });
+      const auctionId = validated.auctionId;
+
       const auction = await auctionService.getAuction(auctionId);
 
       // socket should only be in one room
@@ -44,15 +49,23 @@ export function joinAuction(
       };
       cb(response);
     } catch (err) {
-      console.log(
-        `joinAuction: Failed to switch to auction with id ${auctionId}: ${err}`,
-      );
-      const response: AuctionJoinResponse = {
+      let errorMessage = 'Could not join auction';
+
+      if (err instanceof z.ZodError) {
+        errorMessage =
+          'Invalid input: ' +
+          err.issues.map((e) => e.path.join('.')).join(', ');
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+
+      console.error(`joinAuction Error: ${params.auctionId}`, err);
+
+      cb({
         status: 'error',
         payload: null,
-        error: 'Failed to switch rooms',
-      };
-      cb(response);
+        error: errorMessage,
+      });
     }
   };
 }
