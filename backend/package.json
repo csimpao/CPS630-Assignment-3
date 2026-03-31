@@ -10,7 +10,7 @@
     "test": "jest",
     "start": "node dist/index.js",
     "build": "babel src --out-dir dist --extensions \".ts,.tsx\"",
-    "dev": "tsx watch src/index.ts"
+    "dev": "concurrently -n \"CHECK,TSX\" -c \"red,cyan\" \"tsc --noEmit --watch --preserveWatchOutput\" \"tsx watch src/index.ts\""
   },
   "dependencies": {
     "@auction-platform/shared": "1.0.0",
@@ -22,6 +22,7 @@
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
+    "concurrently": "^9.2.1",
     "tsx": "^4.21.0"
   }
 }
