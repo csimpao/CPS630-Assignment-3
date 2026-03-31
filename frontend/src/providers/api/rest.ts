@@ -3,10 +3,10 @@ import type {
   Auction,
   AuctionCreateParams,
   AuctionSearchParams,
-  UserAddBalanceParams,
   AuctionWithBids,
 } from '@auction-platform/shared/domain';
 import { fetcher } from '../../lib/fetcher';
+import type { ApiActions } from '../../types/api';
 
 export const createApi = (baseUrl: string): RestApi => {
   return {
@@ -22,12 +22,10 @@ export const createApi = (baseUrl: string): RestApi => {
     /**
      * Updates the current user's account balance.
      */
-    addToBalance: async (
-      userAddBalanceParams: UserAddBalanceParams,
-    ): Promise<User> => {
+    addToBalance: async (addedBalanceInCents: number): Promise<User> => {
       return await fetcher(`${baseUrl}/me/balance`, {
         method: 'PATCH',
-        body: JSON.stringify(userAddBalanceParams),
+        body: JSON.stringify({ addedBalanceInCents }),
       });
     },
 
@@ -77,12 +75,11 @@ export const createApi = (baseUrl: string): RestApi => {
     },
   };
 };
-export type RestApi = {
-  getUserInfo: () => Promise<User>;
-  addToBalance: (userAddBalanceParams: UserAddBalanceParams) => Promise<User>;
-  getAuction: (auctionId: Auction['auctionId']) => Promise<AuctionWithBids>;
-  createAuction: (auctionCreateParams: AuctionCreateParams) => Promise<Auction>;
-  searchAuctions: (
-    auctionSearchParams: AuctionSearchParams,
-  ) => Promise<Auction[]>;
-};
+export type RestApi = Pick<
+  ApiActions,
+  | 'getUserInfo'
+  | 'addToBalance'
+  | 'getAuction'
+  | 'createAuction'
+  | 'searchAuctions'
+>;

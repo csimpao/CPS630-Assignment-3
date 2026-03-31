@@ -21,7 +21,8 @@ export type Dto<T> =
 
 export interface ClientToServerEvents {
   bidOnAction: (
-    params: BidCreationParams,
+    auctionId: number,
+    bidInCents: number,
     cb: (response: BidCreationResponse) => void,
   ) => void;
   joinAuction: (

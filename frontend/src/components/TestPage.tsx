@@ -30,7 +30,7 @@ export default function TestPage() {
     bidInCents: Bid['bidInCents'],
   ) => {
     console.log('placed bid', auctionId, bidInCents);
-    await api.bidOnAuction({ auctionId, bidInCents });
+    await api.bidOnAuction(auctionId, bidInCents);
   };
 
   console.log('rerendering');

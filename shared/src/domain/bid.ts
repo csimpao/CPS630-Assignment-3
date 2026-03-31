@@ -11,6 +11,7 @@ export interface Bid {
 }
 
 export interface BidCreationParams {
+  userId: User['userId'];
   auctionId: Auction['auctionId'];
   bidInCents: number;
 }

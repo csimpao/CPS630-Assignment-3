@@ -9,9 +9,16 @@ export function bidOnAuction(
   socketService: SocketService,
 ) {
   return async (
-    params: BidCreationParams,
+    auctionId: number,
+    bidInCents: number,
     cb: (response: BidCreationResponse) => void,
   ) => {
+    const params: BidCreationParams = {
+      auctionId,
+      bidInCents,
+      userId: 0, // TODO: add this with authentication
+    };
+
     try {
       const bid = await auctionService.placeBid(params);
 

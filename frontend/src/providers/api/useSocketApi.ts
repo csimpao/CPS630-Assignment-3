@@ -2,11 +2,10 @@ import type {
   Auction,
   AuctionWithBids,
   Bid,
-  BidCreationParams,
 } from '@auction-platform/shared/domain';
 import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
-import type { ApiProvider } from '../../types/api';
+import type { ApiActions, ApiProvider } from '../../types/api';
 import type {
   ServerToClientEvents,
   ClientToServerEvents,
@@ -63,19 +62,21 @@ export const useSocketApi = (
     relevantBids,
     currentAuction,
     socketApi: {
-      bidOnAuction: (params: BidCreationParams) =>
+      bidOnAuction: (auctionId: number, bidInCents: number) =>
         new Promise<void>((resolve, reject) => {
-          socket.timeout(5000).emit('bidOnAction', params, (err, response) => {
-            if (err) {
-              return reject(ErrTimeout);
-            }
+          socket
+            .timeout(5000)
+            .emit('bidOnAction', auctionId, bidInCents, (err, response) => {
+              if (err) {
+                return reject(ErrTimeout);
+              }
 
-            if (response.status == 'error') {
-              return reject(new Error(response.error));
-            }
+              if (response.status == 'error') {
+                return reject(new Error(response.error));
+              }
 
-            resolve();
-          });
+              resolve();
+            });
         }),
       joinAuction: (auctionId: Auction['auctionId']) =>
         new Promise<void>((resolve, reject) => {
@@ -118,8 +119,7 @@ export const useSocketApi = (
   };
 };
 
-export type SocketApi = {
-  bidOnAuction: (bidCreationParams: BidCreationParams) => Promise<void>;
-  joinAuction: (auctionId: Auction['auctionId']) => Promise<void>;
-  leaveAuction: () => Promise<void>;
-};
+export type SocketApi = Pick<
+  ApiActions,
+  'bidOnAuction' | 'joinAuction' | 'leaveAuction'
+>;
