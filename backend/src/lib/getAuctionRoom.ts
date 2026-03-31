@@ -1,4 +1,4 @@
-import type { Auction } from '@auction-platform/shared';
+import type { Auction } from '@auction-platform/shared/domain';
 
 export function getAuctionRoom(auctionId: Auction['auctionId']) {
   return `auction:${auctionId}`;

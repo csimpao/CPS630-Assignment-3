@@ -1,4 +1,4 @@
-import { AuctionWithBids } from '../auction';
+import { AuctionWithBids } from '../domain';
 
 export const auctionWithBidsVintageCamera: AuctionWithBids = {
   auctionId: 101,

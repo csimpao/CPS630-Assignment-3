@@ -8,7 +8,7 @@ import type {
   UserCreateParams,
   UserAddBalanceParams,
   AuctionWithBids,
-} from '@auction-platform/shared';
+} from '@auction-platform/shared/domain';
 
 /**
  * UserService handles the creation and updating of users in the database.

@@ -1,4 +1,4 @@
-import type { Auction, Bid } from '@auction-platform/shared';
+import type { Auction, Bid } from '@auction-platform/shared/domain';
 import { useApi } from '../providers/api';
 import { useState } from 'react';
 

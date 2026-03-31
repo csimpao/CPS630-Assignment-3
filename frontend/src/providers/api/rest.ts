@@ -5,7 +5,7 @@ import type {
   AuctionSearchParams,
   UserAddBalanceParams,
   AuctionWithBids,
-} from '@auction-platform/shared';
+} from '@auction-platform/shared/domain';
 import { fetcher } from '../../lib/fetcher';
 
 export const createApi = (baseUrl: string): RestApi => {

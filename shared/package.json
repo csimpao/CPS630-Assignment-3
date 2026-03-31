@@ -12,6 +12,10 @@
     "./fixtures": {
       "types": "./dist/fixtures/index.d.ts",
       "import": "./dist/fixtures/index.js"
+    },
+    "./domain": {
+      "types": "./dist/domain/index.d.ts",
+      "import": "./dist/domain/index.js"
     }
   },
   "scripts": {

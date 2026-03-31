@@ -5,7 +5,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 import type { ApiProvider } from '../../types/api';
-import type { Bid } from '@auction-platform/shared';
+import type { Bid } from '@auction-platform/shared/domain';
 import type { RestApi } from './rest';
 import type { UseSocketApiReturn } from './useSocketApi';
 

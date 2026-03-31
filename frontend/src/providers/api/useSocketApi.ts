@@ -3,7 +3,7 @@ import type {
   AuctionWithBids,
   Bid,
   BidCreationParams,
-} from '@auction-platform/shared';
+} from '@auction-platform/shared/domain';
 import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
 import type { ApiProvider } from '../../types/api';

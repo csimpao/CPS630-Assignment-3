@@ -18,7 +18,7 @@ import type {
   Bid,
   BidCreationParams,
   ClientToServerEvents,
-} from '@auction-platform/shared';
+} from '@auction-platform/shared/domain';
 import { SocketIoSocketService } from './services/socket.service';
 
 const PORT = process.env.PORT || 3000;

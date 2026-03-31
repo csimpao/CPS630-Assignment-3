@@ -1,5 +1,7 @@
-import type { AuctionLeaveResponse } from '@auction-platform/shared';
-import type { ClientToServerEvents } from '@auction-platform/shared/socket';
+import type {
+  AuctionLeaveResponse,
+  ClientToServerEvents,
+} from '@auction-platform/shared/domain';
 import type { Socket, DefaultEventsMap } from 'socket.io';
 
 export function leaveAuction(

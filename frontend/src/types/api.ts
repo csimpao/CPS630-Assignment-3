@@ -7,7 +7,7 @@ import type {
   Bid,
   BidCreationParams,
   UserAddBalanceParams,
-} from '@auction-platform/shared';
+} from '@auction-platform/shared/domain';
 
 /**
  * @interface ApiActions

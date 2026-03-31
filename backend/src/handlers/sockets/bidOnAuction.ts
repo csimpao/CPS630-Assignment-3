@@ -1,7 +1,7 @@
 import type {
   BidCreationParams,
   BidCreationResponse,
-} from '@auction-platform/shared';
+} from '@auction-platform/shared/domain';
 import type { AuctionService, SocketService } from '../../types/services';
 
 export function bidOnAuction(

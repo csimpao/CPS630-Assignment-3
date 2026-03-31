@@ -5,8 +5,7 @@ import type {
   QueueService,
   SocketService,
 } from '../../types/services';
-import type { ClientToServerEvents } from '@auction-platform/shared/socket';
-
+import type { ClientToServerEvents } from '@auction-platform/shared/domain';
 import { joinAuction } from './joinAuction';
 import { leaveAuction } from './leaveAuction';
 import { bidOnAuction } from './bidOnAuction';

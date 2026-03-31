@@ -1,8 +1,8 @@
 import type {
   AuctionJoinParams,
   AuctionJoinResponse,
-} from '@auction-platform/shared';
-import type { ClientToServerEvents } from '@auction-platform/shared/socket';
+  ClientToServerEvents,
+} from '@auction-platform/shared/domain';
 import type { Socket, DefaultEventsMap } from 'socket.io';
 import type { AuctionService } from '../../types/services';
 import { getAuctionRoom } from '../../lib/getAuctionRoom';
