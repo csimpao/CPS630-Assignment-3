@@ -55,12 +55,7 @@ export const useSocketApi = (
       socket.off('receiveBidOnAction', handleReceiveBid);
       socket.off('endAuction', handleEndAuction);
     };
-  }, [socket, currentAuctionId]); // Re-subscribe if the auction context changes
-
-  // test
-  socket.on('test', (message) => {
-    console.log('received message', message);
-  });
+  }, [socket, currentAuctionId]);
 
   return {
     isSocketConnected,
