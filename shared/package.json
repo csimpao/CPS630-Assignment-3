@@ -5,10 +5,6 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
     "./fixtures": {
       "types": "./dist/fixtures/index.d.ts",
       "import": "./dist/fixtures/index.js"
@@ -16,13 +12,18 @@
     "./domain": {
       "types": "./dist/domain/index.d.ts",
       "import": "./dist/domain/index.js"
+    },
+    "./schemas": {
+      "types": "./dist/schemas/index.d.ts",
+      "import": "./dist/schemas/index.js"
     }
   },
   "scripts": {
     "build": "babel src --out-dir dist --extensions \".ts,.tsx\" && tsc --emitDeclarationOnly"
   },
   "dependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.28.6",
