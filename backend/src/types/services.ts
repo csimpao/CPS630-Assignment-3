@@ -61,7 +61,9 @@ export interface AuctionService {
    * @param auctionId The auctionId
    * @returns The specified auction
    */
-  getAuction: (auctionId: Auction['auctionId']) => Promise<AuctionWithBids>;
+  getAuction: (
+    auctionId: Auction['auctionId'],
+  ) => Promise<AuctionWithBids | null>;
 
   /**
    * Finalizes an auction once its end time has passed. This involves
@@ -77,7 +79,7 @@ export interface AuctionService {
    * @param params The bid amount and bidder information
    * @returns The successfully placed bid
    */
-  placeBid: (params: BidCreationParams) => Promise<Bid>;
+  placeBid: (params: BidCreationParams) => Promise<Bid | null>;
 }
 
 /**

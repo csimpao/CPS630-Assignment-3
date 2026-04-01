@@ -23,6 +23,7 @@ import type {
 } from '@auction-platform/shared/domain';
 import { SocketIoSocketService } from './services/socket.service';
 import { globalErrorHandler } from './handlers/rest/middleware';
+import { FakeAuctionService } from './__fixtures__/auctionService.mock';
 
 const PORT = process.env.PORT || 3000;
 
@@ -47,39 +48,7 @@ const userService = {
     participatedAuctions: [],
   }),
 } as Partial<UserService> as UserService;
-const auctionService = {
-  getAuction: async (auctionId: Auction['auctionId']) => {
-    if (auctionId === 101) {
-      return auctionWithBidsVintageCamera;
-    } else {
-      return auctionWithBidsUsedCar;
-    }
-  },
-  placeBid: async (params: BidCreationParams): Promise<Bid> => {
-    const bid: Bid = {
-      bidId: 4,
-      auctionId: params.auctionId,
-      userId: 57,
-      bidInCents: params.bidInCents,
-      bidTimeUtc: new Date('2026-03-30T15:48:00Z'),
-    };
-
-    if (params.auctionId === 101) {
-      auctionWithBidsVintageCamera.bids.push(bid);
-    } else {
-      auctionWithBidsUsedCar.bids.push(bid);
-    }
-
-    return bid;
-  },
-  createAuction: async (_params: AuctionCreateParams) => ({
-    ...auctionWithBidsVintageCamera,
-  }),
-  searchAuctions: async (params: AuctionSearchParams) => {
-    console.log(params);
-    return [auctionWithBidsUsedCar, auctionWithBidsVintageCamera];
-  },
-} as Partial<AuctionService> as AuctionService;
+const auctionService = new FakeAuctionService();
 const queueService = {
   scheduleAuctionEnd: async () => {},
 } as Partial<QueueService> as QueueService;

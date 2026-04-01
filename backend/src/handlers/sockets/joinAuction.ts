@@ -29,6 +29,9 @@ export function joinAuction(
       const auctionId = validated.auctionId;
 
       const auction = await auctionService.getAuction(auctionId);
+      if (!auction) {
+        throw new Error('Auction could not be found');
+      }
 
       // socket should only be in one room
       // we assume that one request exists at a time per socket

@@ -24,7 +24,7 @@ export class SocketIoSocketService implements SocketService {
     auctionId: Auction['auctionId'],
   ): Promise<void> {
     const auction = await this.auctionService.getAuction(auctionId);
-    this.io.to(getAuctionRoom(auctionId)).emit('endAuction', auction);
+    this.io.to(getAuctionRoom(auctionId)).emit('endAuction', auction!); // the server created this auction, it must exist
   }
 
   public async notifyBid(

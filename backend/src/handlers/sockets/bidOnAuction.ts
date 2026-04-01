@@ -28,6 +28,11 @@ export function bidOnAuction(
       };
 
       const bid = await auctionService.placeBid(params);
+      if (!bid) {
+        throw new Error(
+          'Bid failed to be placed on auction, auctionService error',
+        );
+      }
 
       cb({
         status: 'ok',
