@@ -2,34 +2,20 @@ import express from 'express';
 import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import { restApi } from './handlers/rest';
+import type { QueueService, UserService } from './types/services';
 import type {
-  AuctionService,
-  QueueService,
-  UserService,
-} from './types/services';
-import { socketApi } from './handlers/sockets';
-import {
-  auctionWithBidsUsedCar,
-  auctionWithBidsVintageCamera,
-} from '@auction-platform/shared/fixtures';
-import type {
-  Auction,
-  AuctionCreateParams,
-  AuctionSearchParams,
-  Bid,
-  BidCreationParams,
   ClientToServerEvents,
+  ServerToClientEvents,
 } from '@auction-platform/shared/domain';
 import { SocketIoSocketService } from './services/socket.service';
-import { globalErrorHandler } from './handlers/rest/middleware';
 import { FakeAuctionService } from './__fixtures__/auctionService.mock';
+import { createApp } from './createApp';
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server<ClientToServerEvents>(httpServer, {
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
   cors: {
     origin: 'http://localhost:5173', // TODO: configure this
     methods: ['GET', 'POST'],
@@ -60,10 +46,7 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
-app.use(express.json());
-app.use('/', restApi(userService, auctionService, queueService));
-app.use(globalErrorHandler);
-socketApi(userService, auctionService, queueService, socketService, io);
+createApp(app, io, userService, auctionService, queueService, socketService);
 
 httpServer.listen(PORT, () => {
   console.log('listening on port: ', PORT);
