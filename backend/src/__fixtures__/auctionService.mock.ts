@@ -109,9 +109,15 @@ export class FakeAuctionService implements AuctionService {
       return null;
     }
 
-    const lastBid = auction.bids[-1];
-    if (lastBid && lastBid.bidInCents >= bidInCents) {
-      return null;
+    const lastBid = auction.bids[auction.bids.length - 1];
+    if (lastBid) {
+      if (lastBid.bidInCents >= bidInCents) {
+        return null;
+      }
+    } else {
+      if (auction.startingPriceCents >= bidInCents) {
+        return null;
+      }
     }
 
     this.currentBidId += 1;
