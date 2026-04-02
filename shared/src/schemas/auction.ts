@@ -18,7 +18,10 @@ export const AuctionGetSchema = z.object({
 });
 
 export const AuctionSearchSchema = z.object({
-  active: z.coerce.boolean().optional(),
+  active: z
+    .union([z.boolean(), z.enum(['true', 'false'])])
+    .transform((val) => (typeof val === 'boolean' ? val : val === 'true'))
+    .optional(),
   query: z.string().min(1).max(128).optional(),
   minPriceInCents: z.coerce.number().int().min(1).optional(),
   maxPriceInCents: z.coerce.number().int().min(1).optional(),
