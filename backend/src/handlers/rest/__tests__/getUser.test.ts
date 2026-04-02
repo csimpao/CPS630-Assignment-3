@@ -8,9 +8,9 @@ describe('getUser', () => {
     let app: Express;
     let httpServer: HttpServer;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       const userService = new FakeUserService();
-      const mockApp = getMockApp({ userService });
+      const mockApp = await getMockApp(false, { userService });
       userService.createUser({});
 
       app = mockApp.app;
@@ -32,7 +32,7 @@ describe('getUser', () => {
 
   it('should return a 404 when the user could not be found', async () => {
     const userService = new FakeUserService(); // do not add a user
-    const mockApp = getMockApp({ userService }); // throw error during test
+    const mockApp = await getMockApp(false, { userService }); // throw error during test
     const app: Express = mockApp.app;
     const response = await request(app).get('/me');
     const body = response.body;
@@ -42,7 +42,9 @@ describe('getUser', () => {
   });
 
   it('should gracefully handle service failures', async () => {
-    const mockApp = getMockApp({ userService: { value: true } as any }); // throw error during test
+    const mockApp = await getMockApp(false, {
+      userService: { value: true } as any,
+    }); // throw error during test
     const app: Express = mockApp.app;
 
     const response = await request(app).get('/me');

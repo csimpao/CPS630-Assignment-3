@@ -9,7 +9,7 @@ describe('searchAuctions', () => {
     let httpServer: HttpServer;
     let mockAuctionService: AuctionService;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       mockAuctionService = {
         createAuction: jest.fn(),
         getAuction: jest.fn(),
@@ -17,7 +17,9 @@ describe('searchAuctions', () => {
         processAuctionClosure: jest.fn(),
         searchAuctions: jest.fn().mockResolvedValue([]),
       };
-      const mockApp = getMockApp({ auctionService: mockAuctionService });
+      const mockApp = await getMockApp(false, {
+        auctionService: mockAuctionService,
+      });
 
       app = mockApp.app;
       httpServer = mockApp.httpServer;
@@ -51,7 +53,9 @@ describe('searchAuctions', () => {
   });
 
   it('should gracefully handle service failures', async () => {
-    const mockApp = getMockApp({ auctionService: { value: true } as any }); // throw error during test
+    const mockApp = await getMockApp(false, {
+      auctionService: { value: true } as any,
+    }); // throw error during test
     const app: Express = mockApp.app;
 
     const response = await request(app).get('/auctions');

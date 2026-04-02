@@ -16,8 +16,8 @@ describe('createAuction', () => {
     let app: Express;
     let httpServer: HttpServer;
 
-    beforeEach(() => {
-      const mockApp = getMockApp();
+    beforeEach(async () => {
+      const mockApp = await getMockApp(false);
       app = mockApp.app;
       httpServer = mockApp.httpServer;
     });
@@ -47,7 +47,9 @@ describe('createAuction', () => {
   });
 
   it('should gracefully handle service failures', async () => {
-    const mockApp = getMockApp({ queueService: { value: true } as any }); // throw error during test
+    const mockApp = await getMockApp(false, {
+      queueService: { value: true } as any,
+    }); // throw error during test
     const app: Express = mockApp.app;
 
     const response = await request(app).post('/auctions').send(params);
