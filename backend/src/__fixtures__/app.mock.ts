@@ -8,6 +8,13 @@ import { FakeAuctionService } from './auctionService.mock';
 import express from 'express';
 import { Server, createServer, IncomingMessage, ServerResponse } from 'http';
 import { createApp } from '../createApp';
+import { mockQueueService } from './queueService.mock';
+import type {
+  AuctionService,
+  QueueService,
+  SocketService,
+  UserService,
+} from '../types/services';
 
 export type HttpServer = Server<typeof IncomingMessage, typeof ServerResponse>;
 export type IoServer = SocketIoServer<
@@ -17,7 +24,12 @@ export type IoServer = SocketIoServer<
   any
 >;
 
-export function getMockApp() {
+export function getMockApp(params?: {
+  userService?: UserService;
+  auctionService?: AuctionService;
+  queueService?: QueueService;
+  socketService?: SocketService;
+}) {
   const app = express();
   const httpServer = createServer(app);
   const io = new SocketIoServer<ClientToServerEvents, ServerToClientEvents>(
@@ -28,10 +40,11 @@ export function getMockApp() {
       },
     },
   );
-  const userService = null as any; // TODO: Fix this
-  const auctionService = new FakeAuctionService();
-  const queueService = null as any; // TODO: Fix this
-  const socketService = new SocketIoSocketService(io, auctionService);
+  const userService = params?.userService ?? (null as any); // TODO: Fix this
+  const auctionService = params?.auctionService ?? new FakeAuctionService();
+  const queueService = params?.queueService ?? mockQueueService;
+  const socketService =
+    params?.socketService ?? new SocketIoSocketService(io, auctionService);
 
   createApp(app, io, userService, auctionService, queueService, socketService);
   return { app, httpServer, io };
