@@ -27,14 +27,14 @@ export interface UserService {
    * @param params
    * @returns
    */
-  addToUserBalance: (params: UserAddBalanceParams) => Promise<User>;
+  addToUserBalance: (params: UserAddBalanceParams) => Promise<User | null>;
 
   /**
    * getUser retrieves the user with the specified user id, if they exist.
    * @param userId The user to be retrieved
    * @returns The user's information
    */
-  getUser: (userId: User['userId']) => Promise<User>;
+  getUser: (userId: User['userId']) => Promise<User | null>;
 }
 
 /**

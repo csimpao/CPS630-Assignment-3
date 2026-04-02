@@ -26,6 +26,11 @@ export const validate =
     }
   };
 
+export interface HandledError {
+  message?: string;
+  status?: any;
+  statusCode?: number;
+}
 export const globalErrorHandler: ErrorRequestHandler = (
   err,
   _req,

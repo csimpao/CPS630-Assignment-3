@@ -46,7 +46,7 @@ describe('createAuction', () => {
     });
   });
 
-  it('gracefully handle service failures', async () => {
+  it('should gracefully handle service failures', async () => {
     const mockApp = getMockApp({ queueService: { value: true } as any }); // throw error during test
     const app: Express = mockApp.app;
 
