@@ -1,5 +1,6 @@
 /**
- * Wrapper around fetch that implements retries and exponential backoff.
+ * Wrapper around fetch that enables retries and exponential backoff.
+ * Not in scope of the current implementation.
  * Enables easy unit testing with a simple mock.
  * @param input fetch's inputs
  * @param init fetch's inits
@@ -9,7 +10,6 @@ export async function fetcher(
   input: RequestInfo | URL,
   init?: RequestInit,
 ): Promise<any> {
-  // TODO: implement retries and exponential backoff
   const response = await fetch(input, init);
   return await response.json();
 }

@@ -24,7 +24,7 @@ export function bidOnAuction(
       const params: BidCreationParams = {
         auctionId: validated.auctionId,
         bidInCents: validated.bidInCents,
-        userId: 1, // TODO: add this with authentication
+        userId: 1, // authentication to be added later
       };
 
       const bid = await auctionService.placeBid(params);
