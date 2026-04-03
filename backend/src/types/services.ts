@@ -7,7 +7,8 @@ import type {
   User,
   UserCreateParams,
   UserAddBalanceParams,
-} from '@auction-platform/shared';
+  AuctionWithBids,
+} from '@auction-platform/shared/domain';
 
 /**
  * UserService handles the creation and updating of users in the database.
@@ -26,14 +27,14 @@ export interface UserService {
    * @param params
    * @returns
    */
-  addToUserBalance: (params: UserAddBalanceParams) => Promise<User>;
+  addToUserBalance: (params: UserAddBalanceParams) => Promise<User | null>;
 
   /**
    * getUser retrieves the user with the specified user id, if they exist.
    * @param userId The user to be retrieved
    * @returns The user's information
    */
-  getUser: (userId: User['userId']) => Promise<User>;
+  getUser: (userId: User['userId']) => Promise<User | null>;
 }
 
 /**
@@ -53,7 +54,16 @@ export interface AuctionService {
    * @param params Search filters
    * @returns An array of auctions matching the search parameters
    */
-  getAuctions: (params: AuctionSearchParams) => Promise<Auction[]>;
+  searchAuctions: (params: AuctionSearchParams) => Promise<Auction[]>;
+
+  /**
+   * Retrieves the specified auction
+   * @param auctionId The auctionId
+   * @returns The specified auction
+   */
+  getAuction: (
+    auctionId: Auction['auctionId'],
+  ) => Promise<AuctionWithBids | null>;
 
   /**
    * Finalizes an auction once its end time has passed. This involves
@@ -69,10 +79,7 @@ export interface AuctionService {
    * @param params The bid amount and bidder information
    * @returns The successfully placed bid
    */
-  placeBid: (
-    auctionId: Auction['auctionId'],
-    params: BidCreationParams,
-  ) => Promise<Bid>;
+  placeBid: (params: BidCreationParams) => Promise<Bid | null>;
 }
 
 /**

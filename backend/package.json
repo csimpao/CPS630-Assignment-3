@@ -4,23 +4,29 @@
   "description": "",
   "license": "ISC",
   "author": "",
-  "type": "commonjs",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "test": "jest",
     "start": "node dist/index.js",
     "build": "babel src --out-dir dist --extensions \".ts,.tsx\"",
-    "dev": "nodemon --watch 'src/**/*.ts' --exec \"yarn build && node dist/index.js\""
+    "dev": "concurrently -n \"CHECK,TSX\" -c \"red,cyan\" \"tsc --noEmit --watch --preserveWatchOutput\" \"tsx watch src/index.ts\""
   },
   "dependencies": {
     "@auction-platform/shared": "1.0.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "mongoose": "^9.3.2"
+    "mongoose": "^9.3.2",
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
-    "nodemon": "^3.1.14"
+    "@types/supertest": "^7.2.0",
+    "concurrently": "^9.2.1",
+    "jest": "^30.3.0",
+    "socket.io-client": "^4.8.3",
+    "supertest": "^7.2.2",
+    "tsx": "^4.21.0"
   }
 }

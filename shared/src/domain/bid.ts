@@ -1,4 +1,5 @@
 import { Auction } from './auction';
+import { Dto } from './socket';
 import { User } from './user';
 
 export interface Bid {
@@ -10,6 +11,9 @@ export interface Bid {
 }
 
 export interface BidCreationParams {
+  userId: User['userId'];
   auctionId: Auction['auctionId'];
   bidInCents: number;
 }
+
+export type BidCreationResponse = Dto<Bid>;

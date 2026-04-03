@@ -5,8 +5,7 @@ import type {
   AuctionWithBids,
   AuctionSearchParams,
   Bid,
-  BidCreationParams,
-} from '@auction-platform/shared';
+} from '@auction-platform/shared/domain';
 
 /**
  * @interface ApiActions
@@ -23,7 +22,7 @@ export interface ApiActions {
 
   /**
    * Increases the user's account balance.
-   * @param {addedBalanceInCents} addedBalanceInCents - The amount to the add
+   * @param {number} addedBalanceInCents - The amount to the add
    * @returns {Promise<User>} The updated User object reflecting the new balance
    */
   addToBalance: (addedBalanceInCents: number) => Promise<User>;
@@ -55,10 +54,13 @@ export interface ApiActions {
 
   /**
    * Places a bid on a specific auction via a real-time socket connection.
-   * @param {BidCreationParams} bidCreationParams - Details of the bid (amount, auction ID)
+   * @param {Auction['auctionId'], number} auctionId, bidInCents - Details of the bid (amount, auction ID)
    * @returns {Promise<void>} Resolves when the bid command is sent
    */
-  bidOnAuction: (bidCreationParams: BidCreationParams) => Promise<void>;
+  bidOnAuction: (
+    auctionId: Auction['auctionId'],
+    bidInCents: number,
+  ) => Promise<void>;
 
   /**
    * Subscribes the user to real-time updates for a specific auction.
