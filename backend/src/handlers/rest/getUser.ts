@@ -5,7 +5,7 @@ import type { HandledError } from './middleware';
 export function getUser(userService: UserService) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = await userService.getUser(1); // TODO: fetch this off the JWT
+      const user = await userService.getUser(req.userId);
       if (!user) {
         const err: HandledError = {
           message: 'User could not be found',

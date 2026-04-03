@@ -7,8 +7,11 @@ export interface User {
   participatedAuctions: Auction[];
 }
 
-// TODO: Add this
-export interface UserCreateParams {}
+export interface UserCreateParams {
+  name: string;
+  email: string;
+  password: string;
+}
 
 export interface UserAddBalanceParams {
   userId: User['userId'];

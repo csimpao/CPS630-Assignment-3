@@ -9,6 +9,7 @@ import { z } from 'zod';
 export function bidOnAuction(
   auctionService: AuctionService,
   socketService: SocketService,
+  userId: number,
 ) {
   return async (
     auctionId: number,
@@ -24,7 +25,7 @@ export function bidOnAuction(
       const params: BidCreationParams = {
         auctionId: validated.auctionId,
         bidInCents: validated.bidInCents,
-        userId: 1, // authentication to be added later
+        userId,
       };
 
       const bid = await auctionService.placeBid(params);

@@ -1,15 +1,20 @@
-/**
- * Wrapper around fetch that enables retries and exponential backoff.
- * Not in scope of the current implementation.
- * Enables easy unit testing with a simple mock.
- * @param input fetch's inputs
- * @param init fetch's inits
- * @returns the resulting JSON from the response
- */
 export async function fetcher(
   input: RequestInfo | URL,
   init?: RequestInit,
 ): Promise<any> {
-  const response = await fetch(input, init);
+  const token = localStorage.getItem('token');
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    ...(init?.headers as Record<string, string>),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+
+  const response = await fetch(input, { ...init, headers });
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
+    throw new Error(body.message || `Request failed: ${response.status}`);
+  }
+
   return await response.json();
 }

@@ -5,6 +5,7 @@ import type {
 import { Server as SocketIoServer, type DefaultEventsMap } from 'socket.io';
 import { SocketIoSocketService } from '../services/socket.service';
 import { FakeAuctionService } from './auctionService.mock';
+import { FakeUserService } from './userService.mock';
 import express, { type Express } from 'express';
 import { Server, createServer, IncomingMessage, ServerResponse } from 'http';
 import { createApp } from '../createApp';
@@ -17,6 +18,11 @@ import type {
 } from '../types/services';
 import type { AddressInfo } from 'net';
 import { io as ClientIo, Socket } from 'socket.io-client';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
+export const TEST_USER_ID = 1;
+export const testAuthToken = jwt.sign({ userId: TEST_USER_ID }, JWT_SECRET);
 
 export type HttpServer = Server<typeof IncomingMessage, typeof ServerResponse>;
 export type IoServer = SocketIoServer<
@@ -75,7 +81,7 @@ export async function getMockApp(
       },
     },
   );
-  const userService = params?.userService ?? (null as any); // TODO: Fix this
+  const userService = params?.userService ?? new FakeUserService();
   const auctionService = params?.auctionService ?? new FakeAuctionService();
   const queueService = params?.queueService ?? mockQueueService;
   const socketService =
@@ -89,7 +95,9 @@ export async function getMockApp(
         const address = httpServer.address() as AddressInfo;
         const port = address.port;
 
-        const clientIo = ClientIo(`http://localhost:${port}`);
+        const clientIo = ClientIo(`http://localhost:${port}`, {
+          auth: { token: testAuthToken },
+        });
         clientIo.on('connect', () =>
           resolve({ app, httpServer, io, clientIo }),
         );

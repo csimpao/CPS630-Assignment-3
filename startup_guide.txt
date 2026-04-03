@@ -1,0 +1,26 @@
+Launch instructions:
+
+1. npm i in front and backend
+2. npn run build in shared
+3. 
+
+Create a file named ".env" inside the backend/ .
+
+
+Paste the following .env:
+
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/auction-platform
+JWT_SECRET=invincibleunderthesun
+PORT=3000
+
+MONGO_URI:
+
+username: cps630group1
+pass:starscream
+
+
+4. npm run dev in front and backend
+
+
+
+

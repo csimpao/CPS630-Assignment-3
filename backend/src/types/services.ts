@@ -35,6 +35,16 @@ export interface UserService {
    * @returns The user's information
    */
   getUser: (userId: User['userId']) => Promise<User | null>;
+
+  /**
+   * getUserByEmail retrieves a user and their password hash by email.
+   * Used for login verification.
+   * @param email The email to look up
+   * @returns The user and their passwordHash, or null if not found
+   */
+  getUserByEmail: (
+    email: string,
+  ) => Promise<{ user: User; passwordHash: string } | null>;
 }
 
 /**

@@ -24,9 +24,8 @@ export interface UseSocketApiReturn {
 export const useSocketApi = (
   socket: Socket<ServerToClientEvents, ClientToServerEvents>,
 ): UseSocketApiReturn => {
-  // TODO: implement isConnected functionality
-  const [isSocketConnected, _setIsSocketConnected] =
-    useState<ApiProvider['isSocketConnected']>(false);
+  const [isSocketConnected, setIsSocketConnected] =
+    useState<ApiProvider['isSocketConnected']>(socket.connected);
   const [currentAuctionId, setCurrentAuctionId] =
     useState<ApiProvider['currentAuctionId']>(null);
   const [currentAuction, setCurrentAuction] =
@@ -34,6 +33,19 @@ export const useSocketApi = (
   const [relevantBids, setRelevantBids] = useState<ApiProvider['relevantBids']>(
     [],
   );
+
+  useEffect(() => {
+    const handleConnect = () => setIsSocketConnected(true);
+    const handleDisconnect = () => setIsSocketConnected(false);
+
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
+
+    return () => {
+      socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
+    };
+  }, [socket]);
 
   useEffect(() => {
     const handleReceiveBid = (bid: Bid) => {

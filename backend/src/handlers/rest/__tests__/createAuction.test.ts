@@ -1,5 +1,5 @@
 import type { AuctionCreateParams } from '@auction-platform/shared/domain';
-import { getMockApp, type HttpServer } from '../../../__fixtures__/app.mock';
+import { getMockApp, type HttpServer, testAuthToken } from '../../../__fixtures__/app.mock';
 import type { Express } from 'express';
 import request from 'supertest';
 
@@ -23,14 +23,14 @@ describe('createAuction', () => {
     });
 
     it('should validate the incoming data', async () => {
-      const response = await request(app).post('/auctions');
+      const response = await request(app).post('/auctions').set('Authorization', `Bearer ${testAuthToken}`);
       const body = response.body;
       expect(body.status).toBe('fail');
       expect(response.statusCode).toBe(400);
     });
 
     it('should return the created auction', async () => {
-      const response = await request(app).post('/auctions').send(params);
+      const response = await request(app).post('/auctions').set('Authorization', `Bearer ${testAuthToken}`).send(params);
       const body = response.body;
 
       expect(body).toEqual({
@@ -52,7 +52,7 @@ describe('createAuction', () => {
     }); // throw error during test
     const app: Express = mockApp.app;
 
-    const response = await request(app).post('/auctions').send(params);
+    const response = await request(app).post('/auctions').set('Authorization', `Bearer ${testAuthToken}`).send(params);
     const body = response.body;
     expect(response.statusCode).toBe(500);
     expect(body.status).toBe('error');
