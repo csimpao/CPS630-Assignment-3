@@ -198,3 +198,191 @@ body {
   border-radius: var(--radius);
   padding: var(--spacing-6);
 }
+
+/* ── Dashboard Layout ─────────────────────────────────────── */
+.dashboard {
+  min-height: 100vh;
+  background-color: var(--color-base);
+}
+
+.dashboard__content {
+  padding: 2.5rem var(--spacing-6);
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+/* ── Navbar ────────────────────────────────────────────────── */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  padding: 0.875rem var(--spacing-6);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-outline-variant);
+}
+
+.navbar__search {
+  position: relative;
+  flex: 0 1 420px;
+}
+
+.navbar__search-icon {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-on-surface-variant);
+  pointer-events: none;
+}
+
+.navbar__search-input {
+  padding-left: 2.5rem;
+}
+
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.navbar__balance {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-right: 0.5rem;
+  white-space: nowrap;
+}
+
+.navbar__balance-amount {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+/* ── Button – Outlined ────────────────────────────────────── */
+.btn-outlined {
+  background-color: var(--color-primary);
+  color: var(--color-primary-text);
+  border: 1px solid var(--color-primary);
+}
+.btn-outlined:hover:not(:disabled) {
+  background-color: var(--color-primary-dim);
+}
+
+/* ── Status Badge ─────────────────────────────────────────── */
+.status-badge {
+  display: inline-block;
+  width: fit-content;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.625rem;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.status-badge--live {
+  background-color: rgba(105, 246, 184, 0.15);
+  color: var(--color-secondary);
+}
+
+.status-badge--history {
+  background-color: rgba(179, 136, 255, 0.15);
+  color: #b388ff;
+}
+
+.status-badge--concluded {
+  background-color: rgba(173, 170, 170, 0.15);
+  color: var(--color-on-surface-variant);
+}
+
+/* ── Auction Section ──────────────────────────────────────── */
+.auction-section__header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.auction-section__title {
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+/* ── Auction Grid ─────────────────────────────────────────── */
+.auction-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-4);
+}
+
+/* ── Auction Card ─────────────────────────────────────────── */
+.auction-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auction-card__description {
+  flex: 1;
+}
+
+.auction-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 0.5rem;
+}
+
+.auction-card__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.auction-card__price {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.auction-card__date {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-on-surface);
+}
+
+.auction-card__bid-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.auction-card__bid-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.auction-card__bid-btn {
+  flex-shrink: 0;
+}
+
+/* ── Empty State ──────────────────────────────────────────── */
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem var(--spacing-4);
+  border: 1px dashed var(--color-outline-variant);
+  border-radius: var(--radius);
+}
+
+.empty-state__message {
+  font-size: 0.9375rem;
+  color: var(--color-on-surface-variant);
+}

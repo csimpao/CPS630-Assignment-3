@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import ApiContextProvider from './providers/api';
 import { AuthProvider, useAuth } from './providers/auth';
@@ -8,7 +8,7 @@ import { useSocketApi } from './providers/api/useSocketApi';
 import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
 import BalancePage from './components/BalancePage';
-import TestPage from './components/TestPage';
+import DashboardPage from './components/DashboardPage';
 import type {
   ClientToServerEvents,
   ServerToClientEvents,
@@ -17,7 +17,7 @@ import type {
 const BACKEND_URL = import.meta.env.BACKEND_URL || 'http://localhost:3000';
 
 function AuthenticatedApp() {
-  const { user, logout, token } = useAuth();
+  const { token } = useAuth();
 
   const ioRef = useRef<Socket<ServerToClientEvents, ClientToServerEvents>>(
     io(BACKEND_URL, { auth: { token } }),
@@ -28,17 +28,8 @@ function AuthenticatedApp() {
 
   return (
     <ApiContextProvider restApi={restApi} socketApi={socketApi}>
-      <nav>
-        <span>Welcome, {user?.name}</span>
-        {' | '}
-        <Link to="/">Home</Link>
-        {' | '}
-        <Link to="/balance">Add Credits</Link>
-        {' | '}
-        <button onClick={logout}>Logout</button>
-      </nav>
       <Routes>
-        <Route path="/" element={<TestPage />} />
+        <Route path="/" element={<DashboardPage />} />
         <Route path="/balance" element={<BalancePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
