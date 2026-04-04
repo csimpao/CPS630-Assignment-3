@@ -84,6 +84,15 @@ body {
 
 .btn-full { width: 100%; }
 
+.btn-danger-text {
+  background: none;
+  color: #ff6b6b;
+  padding: 0.625rem 0.5rem;
+}
+.btn-danger-text:hover:not(:disabled) {
+  color: #ff4444;
+}
+
 /* ── Input Fields ──────────────────────────────────────────── */
 .input-group {
   display: flex;

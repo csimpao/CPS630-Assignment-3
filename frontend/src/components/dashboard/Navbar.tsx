@@ -4,7 +4,7 @@ import AddBalanceButton from './AddBalanceButton';
 import NewAuctionButton from './NewAuctionButton';
 
 export default function Navbar() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const balanceInCents = user?.balanceInCents ?? 0;
   const formattedBalance = `$${(balanceInCents / 100).toLocaleString('en-US', {
     minimumFractionDigits: 2,
@@ -23,6 +23,9 @@ export default function Navbar() {
 
         <AddBalanceButton />
         <NewAuctionButton />
+        <button className="btn btn-danger-text" type="button" onClick={logout}>
+          LOG OUT
+        </button>
       </div>
     </nav>
   );
