@@ -2,6 +2,10 @@ import { getMockApp, type HttpServer } from '../../../__fixtures__/app.mock';
 import type { Express } from 'express';
 import request from 'supertest';
 import { FakeUserService } from '../../../__fixtures__/userService.mock';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-production';
+const testToken = jwt.sign({ userId: 1 }, JWT_SECRET);
 
 describe('getUser', () => {
   describe('default app mock', () => {
@@ -11,19 +15,19 @@ describe('getUser', () => {
     beforeEach(async () => {
       const userService = new FakeUserService();
       const mockApp = await getMockApp(false, { userService });
-      userService.createUser({});
+      await userService.createUser({ name: 'Test User', email: 'test@test.com', password: 'password' });
 
       app = mockApp.app;
       httpServer = mockApp.httpServer;
     });
 
     it('should return the queried user', async () => {
-      const response = await request(app).get('/me');
+      const response = await request(app).get('/me').set('Authorization', `Bearer ${testToken}`);
       const body = response.body;
 
       expect(body).toEqual({
         balanceInCents: 0,
-        name: 'name',
+        name: 'Test User',
         participatedAuctions: [],
         userId: 1,
       });
@@ -34,7 +38,7 @@ describe('getUser', () => {
     const userService = new FakeUserService(); // do not add a user
     const mockApp = await getMockApp(false, { userService }); // throw error during test
     const app: Express = mockApp.app;
-    const response = await request(app).get('/me');
+    const response = await request(app).get('/me').set('Authorization', `Bearer ${testToken}`);
     const body = response.body;
 
     expect(response.statusCode).toBe(404);
@@ -47,7 +51,7 @@ describe('getUser', () => {
     }); // throw error during test
     const app: Express = mockApp.app;
 
-    const response = await request(app).get('/me');
+    const response = await request(app).get('/me').set('Authorization', `Bearer ${testToken}`);
     const body = response.body;
     expect(response.statusCode).toBe(500);
     expect(body.status).toBe('error');

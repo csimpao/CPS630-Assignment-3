@@ -23,7 +23,7 @@ export default function ApiContextProvider({
   const relevantBids: Bid[] = socketApi.relevantBids;
   const currentAuctionId = socketApi.currentAuctionId;
   const currentAuction = socketApi.currentAuction;
-  const isSocketConnected = false;
+  const isSocketConnected = socketApi.isSocketConnected;
 
   const values = useMemo<ApiProvider>(
     () => ({

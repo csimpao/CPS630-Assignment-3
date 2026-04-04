@@ -10,7 +10,7 @@ export function addBalance(userService: UserService) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const params = {
       ...(req.validated as ValidatedData),
-      userId: 1, // TODO: add this from authentication
+      userId: req.userId,
     };
 
     try {

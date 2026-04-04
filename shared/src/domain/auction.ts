@@ -16,7 +16,6 @@ export type AuctionCreateParams = Pick<
   'title' | 'description' | 'startingPriceCents' | 'endTimeUtc'
 >;
 
-// TODO: Fill this out
 export interface AuctionSearchParams {
   active?: boolean | undefined;
   query?: string | undefined;
