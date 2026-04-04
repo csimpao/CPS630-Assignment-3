@@ -17,7 +17,7 @@ MONGO_URI:
 
 username: cps630group1
 pass:starscream
-
+cluster: cluster0.x3udhtx
 
 4. npm run dev in front and backend
 
