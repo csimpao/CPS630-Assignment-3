@@ -381,6 +381,11 @@ body {
   flex-shrink: 0;
 }
 
+/* ── Inactive Auction Card ────────────────────────────────── */
+.auction-card--inactive {
+  opacity: 0.5;
+}
+
 /* ── Empty State ──────────────────────────────────────────── */
 .empty-state {
   display: flex;
