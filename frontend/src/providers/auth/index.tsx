@@ -15,6 +15,7 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  setUser: (user: User) => void;
   isLoading: boolean;
 }
 
@@ -84,7 +85,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }
 
   return (
-    <AuthContext value={{ user, token, login, signup, logout, isLoading }}>
+    <AuthContext value={{ user, token, login, signup, logout, setUser, isLoading }}>
       {children}
     </AuthContext>
   );
