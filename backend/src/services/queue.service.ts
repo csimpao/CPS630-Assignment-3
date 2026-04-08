@@ -39,8 +39,6 @@ export class LocalQueueService implements QueueService {
   ): void {
     this.processor = processor;
 
-    // Restart recovery: re-schedule any auctions still marked active so we
-    // don't lose pending closures across server restarts.
     AuctionModel.find({ active: true })
       .then((docs) => {
         for (const doc of docs) {
