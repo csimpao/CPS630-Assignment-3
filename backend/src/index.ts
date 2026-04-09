@@ -3,14 +3,14 @@ import express from 'express';
 import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import type { QueueService } from './types/services';
 import type {
   ClientToServerEvents,
   ServerToClientEvents,
 } from '@auction-platform/shared/domain';
 import { SocketIoSocketService } from './services/socket.service';
 import { MongoUserService } from './services/user.service';
-import { FakeAuctionService } from './__fixtures__/auctionService.mock';
+import { MongoAuctionService } from './services/auction.service';
+import { LocalQueueService } from './services/queue.service';
 import { createApp } from './createApp';
 import { connectDb } from './db';
 
@@ -36,15 +36,16 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 const userService = new MongoUserService();
-const auctionService = new FakeAuctionService();
-const queueService = {
-  scheduleAuctionEnd: async () => {},
-} as Partial<QueueService> as QueueService;
+const auctionService = new MongoAuctionService();
+const queueService = new LocalQueueService();
 const socketService = new SocketIoSocketService(io, auctionService);
 
 createApp(app, io, userService, auctionService, queueService, socketService);
 
 connectDb().then(() => {
+  queueService.startWorker((auctionId) =>
+    auctionService.processAuctionClosure(auctionId),
+  );
   httpServer.listen(PORT, () => {
     console.log('listening on port: ', PORT);
   });

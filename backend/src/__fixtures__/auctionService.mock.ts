@@ -33,7 +33,7 @@ export class FakeAuctionService implements AuctionService {
     return auction;
   }
 
-  public async searchAuctions(params: AuctionSearchParams): Promise<Auction[]> {
+  public async searchAuctions(params: AuctionSearchParams): Promise<AuctionWithBids[]> {
     const { active, query, minPriceInCents, maxPriceInCents } = params;
     let filteredItems = this.auctions;
 

@@ -64,7 +64,7 @@ export interface AuctionService {
    * @param params Search filters
    * @returns An array of auctions matching the search parameters
    */
-  searchAuctions: (params: AuctionSearchParams) => Promise<Auction[]>;
+  searchAuctions: (params: AuctionSearchParams) => Promise<AuctionWithBids[]>;
 
   /**
    * Retrieves the specified auction

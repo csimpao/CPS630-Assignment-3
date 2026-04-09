@@ -14,7 +14,7 @@ function docToUser(doc: any): User {
     userId: doc.userId,
     name: doc.name,
     balanceInCents: doc.balanceInCents,
-    participatedAuctions: [],
+    participatedAuctions: doc.participatedAuctions ?? [],
   };
 }
 
