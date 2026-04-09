@@ -10,9 +10,13 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const [activeAuctions, setActiveAuctions] = useState<AuctionWithBids[]>([]);
   const [inactiveAuctions, setInactiveAuctions] = useState<AuctionWithBids[]>([]);
+  const [lastFetchedAt, setLastFetchedAt] = useState<Date | null>(null);
 
   useEffect(() => {
-    api.searchAuctions({ active: true }).then(setActiveAuctions);
+    api.searchAuctions({ active: true }).then((auctions) => {
+      setActiveAuctions(auctions);
+      setLastFetchedAt(new Date());
+    });
     api.searchAuctions({ active: false }).then(setInactiveAuctions);
   }, []);
 
@@ -29,6 +33,7 @@ export default function DashboardPage() {
           badgeVariant="live"
           auctions={activeAuctions}
           emptyMessage="No active auctions"
+          lastFetchedAt={lastFetchedAt}
         />
 
         <AuctionSection
