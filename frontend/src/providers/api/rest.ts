@@ -57,7 +57,7 @@ export const createApi = (baseUrl: string): RestApi => {
      */
     searchAuctions: async (
       auctionSearchParams: AuctionSearchParams,
-    ): Promise<Auction[]> => {
+    ): Promise<AuctionWithBids[]> => {
       const params = new URLSearchParams();
       const keys = Object.keys(
         auctionSearchParams,

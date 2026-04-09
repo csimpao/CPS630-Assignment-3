@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApi } from '../providers/api';
+import { useAuth } from '../providers/auth';
 
 function formatCentsToEth(cents: number): string {
   return (cents / 100).toFixed(2);
@@ -27,6 +28,7 @@ export default function AuctionRoomView() {
   const { auctionId } = useParams<{ auctionId: string }>();
   const navigate = useNavigate();
   const { api, currentAuction, relevantBids } = useApi();
+  const { setUser } = useAuth();
 
   const [bidAmount, setBidAmount] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -83,6 +85,8 @@ export default function AuctionRoomView() {
     try {
       await api.bidOnAuction(numericAuctionId, bidInCents);
       setBidAmount('');
+      const updatedUser = await api.getUserInfo();
+      setUser(updatedUser);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to place bid');
     }

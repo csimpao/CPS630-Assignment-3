@@ -1,9 +1,16 @@
-import type { Auction } from '@auction-platform/shared/domain';
+import type { Auction, AuctionWithBids } from '@auction-platform/shared/domain';
 import { useNavigate } from 'react-router-dom';
 
 interface AuctionsListViewProps {
-  auctions: Auction[];
+  auctions: (Auction | AuctionWithBids)[];
   clickable?: boolean;
+}
+
+function getCurrentPrice(auction: Auction | AuctionWithBids): number {
+  if ('bids' in auction && auction.bids.length > 0) {
+    return auction.bids[auction.bids.length - 1].bidInCents;
+  }
+  return auction.startingPriceCents;
 }
 
 function formatCentsToEth(cents: number): string {
@@ -37,7 +44,7 @@ export default function AuctionsListView({ auctions, clickable = true }: Auction
             <div className="auction-card__meta-item">
               <span className="label">Current Price</span>
               <span className="auction-card__price">
-                ${formatCentsToEth(auction.startingPriceCents)}
+                ${formatCentsToEth(getCurrentPrice(auction))}
               </span>
             </div>
             <div className="auction-card__meta-item">

@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import type {
   User,
-  Auction,
+  AuctionWithBids,
   UserCreateParams,
   UserAddBalanceParams,
 } from '@auction-platform/shared/domain';
@@ -11,7 +11,7 @@ import { AuctionModel } from '../models/Auction';
 
 const SALT_ROUNDS = 10;
 
-function docToUser(doc: any, auctions?: Auction[]): User {
+function docToUser(doc: any, auctions?: AuctionWithBids[]): User {
   return {
     userId: doc.userId,
     name: doc.name,
@@ -49,12 +49,11 @@ export class MongoUserService implements UserService {
     if (!doc) return null;
 
     const auctionIds: number[] = doc.participatedAuctions ?? [];
-    let auctions: Auction[] = [];
+    let auctions: AuctionWithBids[] = [];
     if (auctionIds.length > 0) {
-      const auctionDocs = await AuctionModel.find(
-        { auctionId: { $in: auctionIds } },
-        { bids: 0 },
-      );
+      const auctionDocs = await AuctionModel.find({
+        auctionId: { $in: auctionIds },
+      });
       auctions = auctionDocs.map((a) => ({
         auctionId: a.auctionId,
         title: a.title,
@@ -63,6 +62,13 @@ export class MongoUserService implements UserService {
         startTimeUtc: a.startTimeUtc,
         endTimeUtc: a.endTimeUtc,
         active: a.active,
+        bids: (a.bids ?? []).map((b: any) => ({
+          bidId: b.bidId,
+          auctionId: b.auctionId,
+          userId: b.userId,
+          bidInCents: b.bidInCents,
+          bidTimeUtc: b.bidTimeUtc,
+        })),
       }));
     }
 

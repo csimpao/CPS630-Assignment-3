@@ -135,7 +135,10 @@ export class MongoAuctionService implements AuctionService {
     await AuctionModel.updateOne({ auctionId }, { $push: { bids: bid } });
     await UserModel.updateOne(
       { userId },
-      { $addToSet: { participatedAuctions: auctionId } },
+      {
+        $addToSet: { participatedAuctions: auctionId },
+        $inc: { balanceInCents: -bidInCents },
+      },
     );
 
     return bid;

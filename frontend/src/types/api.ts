@@ -48,7 +48,7 @@ export interface ApiActions {
    */
   searchAuctions: (
     auctionSearchParams: AuctionSearchParams,
-  ) => Promise<Auction[]>;
+  ) => Promise<AuctionWithBids[]>;
 
   // websocket actions
 

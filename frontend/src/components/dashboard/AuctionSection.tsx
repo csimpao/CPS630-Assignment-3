@@ -1,4 +1,4 @@
-import type { Auction } from '@auction-platform/shared/domain';
+import type { Auction, AuctionWithBids } from '@auction-platform/shared/domain';
 import StatusBadge from './StatusBadge';
 import AuctionsListView from './AuctionsListView';
 import EmptyState from './EmptyState';
@@ -7,7 +7,7 @@ interface AuctionSectionProps {
   title: string;
   badgeLabel: string;
   badgeVariant: 'live' | 'history' | 'concluded';
-  auctions: Auction[];
+  auctions: (Auction | AuctionWithBids)[];
   emptyMessage: string;
   clickable?: boolean;
 }

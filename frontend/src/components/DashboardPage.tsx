@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Auction } from '@auction-platform/shared/domain';
+import type { AuctionWithBids } from '@auction-platform/shared/domain';
 import { useApi } from '../providers/api';
 import { useAuth } from '../providers/auth';
 import Navbar from './dashboard/Navbar';
@@ -8,8 +8,8 @@ import AuctionSection from './dashboard/AuctionSection';
 export default function DashboardPage() {
   const { api } = useApi();
   const { user } = useAuth();
-  const [activeAuctions, setActiveAuctions] = useState<Auction[]>([]);
-  const [inactiveAuctions, setInactiveAuctions] = useState<Auction[]>([]);
+  const [activeAuctions, setActiveAuctions] = useState<AuctionWithBids[]>([]);
+  const [inactiveAuctions, setInactiveAuctions] = useState<AuctionWithBids[]>([]);
 
   useEffect(() => {
     api.searchAuctions({ active: true }).then(setActiveAuctions);
