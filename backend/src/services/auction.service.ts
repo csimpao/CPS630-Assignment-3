@@ -8,6 +8,7 @@ import type {
 } from '@auction-platform/shared/domain';
 import type { AuctionService } from '../types/services';
 import { AuctionModel } from '../models/Auction';
+import { UserModel } from '../models/User';
 
 function docToAuction(doc: any): Auction {
   return {
@@ -59,7 +60,7 @@ export class MongoAuctionService implements AuctionService {
 
   public async searchAuctions(
     params: AuctionSearchParams,
-  ): Promise<Auction[]> {
+  ): Promise<AuctionWithBids[]> {
     const { active, query, minPriceInCents, maxPriceInCents } = params;
 
     const filter: Record<string, unknown> = {};
@@ -86,7 +87,7 @@ export class MongoAuctionService implements AuctionService {
       return true;
     });
 
-    return filteredByPrice.map(docToAuction);
+    return filteredByPrice.map(docToAuctionWithBids);
   }
 
   public async getAuction(
@@ -117,6 +118,11 @@ export class MongoAuctionService implements AuctionService {
       return null;
     }
 
+    const user = await UserModel.findOne({ userId });
+    if (!user || user.balanceInCents < bidInCents) {
+      return null;
+    }
+
     const bidId = auctionId * 1_000_000 + doc.bids.length + 1;
     const bid: Bid = {
       bidId,
@@ -127,6 +133,10 @@ export class MongoAuctionService implements AuctionService {
     };
 
     await AuctionModel.updateOne({ auctionId }, { $push: { bids: bid } });
+    await UserModel.updateOne(
+      { userId },
+      { $addToSet: { participatedAuctions: auctionId } },
+    );
 
     return bid;
   }
