@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { NumericFormat } from 'react-number-format';
+import { useApi } from '../../providers/api';
+import { useAuth } from '../../providers/auth';
 
 interface AddBalanceModalProps {
   isOpen: boolean;
@@ -10,6 +12,10 @@ const QUICK_ADD_OPTIONS = [5_000, 10_000, 25_000];
 
 export default function AddBalanceModal({ isOpen, onClose }: AddBalanceModalProps) {
   const [amount, setAmount] = useState<number | undefined>(undefined);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { api } = useApi();
+  const { setUser } = useAuth();
 
   if (!isOpen) return null;
 
@@ -17,10 +23,20 @@ export default function AddBalanceModal({ isOpen, onClose }: AddBalanceModalProp
     setAmount((prev) => (prev ?? 0) + value);
   }
 
-  function handleConfirm() {
-    // No functionality yet — just close
-    setAmount(undefined);
-    onClose();
+  async function handleConfirm() {
+    if (!amount) return;
+    setError(null);
+    setIsSubmitting(true);
+    try {
+      const updatedUser = await api.addToBalance(Math.round(amount * 100));
+      setUser(updatedUser);
+      setAmount(undefined);
+      onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to add balance');
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   function handleCancel() {
@@ -71,13 +87,15 @@ export default function AddBalanceModal({ isOpen, onClose }: AddBalanceModalProp
           ))}
         </div>
 
+        {error && <p className="modal__error">{error}</p>}
+
         <button
           className="btn btn-primary btn-full modal__confirm"
           type="button"
-          disabled={!amount}
+          disabled={!amount || isSubmitting}
           onClick={handleConfirm}
         >
-          CONFIRM
+          {isSubmitting ? 'ADDING...' : 'CONFIRM'}
         </button>
 
         <button

@@ -9,6 +9,7 @@ import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
 import BalancePage from './components/BalancePage';
 import DashboardPage from './components/DashboardPage';
+import AuctionRoomView from './components/AuctionRoomView';
 import type {
   ClientToServerEvents,
   ServerToClientEvents,
@@ -30,6 +31,7 @@ function AuthenticatedApp() {
     <ApiContextProvider restApi={restApi} socketApi={socketApi}>
       <Routes>
         <Route path="/" element={<DashboardPage />} />
+        <Route path="/auction/:auctionId" element={<AuctionRoomView />} />
         <Route path="/balance" element={<BalancePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

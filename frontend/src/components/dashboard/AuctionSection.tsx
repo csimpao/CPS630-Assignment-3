@@ -9,6 +9,7 @@ interface AuctionSectionProps {
   badgeVariant: 'live' | 'history' | 'concluded';
   auctions: Auction[];
   emptyMessage: string;
+  clickable?: boolean;
 }
 
 export default function AuctionSection({
@@ -17,6 +18,7 @@ export default function AuctionSection({
   badgeVariant,
   auctions,
   emptyMessage,
+  clickable = true,
 }: AuctionSectionProps) {
   return (
     <section className="auction-section">
@@ -26,7 +28,7 @@ export default function AuctionSection({
       </div>
 
       {auctions.length > 0 ? (
-        <AuctionsListView auctions={auctions} />
+        <AuctionsListView auctions={auctions} clickable={clickable} />
       ) : (
         <EmptyState message={emptyMessage} />
       )}

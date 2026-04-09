@@ -1,13 +1,23 @@
+import { useEffect, useState } from 'react';
 import type { Auction } from '@auction-platform/shared/domain';
+import { useApi } from '../providers/api';
+import { useAuth } from '../providers/auth';
 import Navbar from './dashboard/Navbar';
 import AuctionSection from './dashboard/AuctionSection';
 
-// Empty arrays for now — will be wired to API later
-const activeAuctions: Auction[] = [];
-const participatedAuctions: Auction[] = [];
-const inactiveAuctions: Auction[] = [];
-
 export default function DashboardPage() {
+  const { api } = useApi();
+  const { user } = useAuth();
+  const [activeAuctions, setActiveAuctions] = useState<Auction[]>([]);
+  const [inactiveAuctions, setInactiveAuctions] = useState<Auction[]>([]);
+
+  useEffect(() => {
+    api.searchAuctions({ active: true }).then(setActiveAuctions);
+    api.searchAuctions({ active: false }).then(setInactiveAuctions);
+  }, []);
+
+  const participatedAuctions = user?.participatedAuctions ?? [];
+
   return (
     <div className="dashboard">
       <Navbar />
@@ -35,6 +45,7 @@ export default function DashboardPage() {
           badgeVariant="concluded"
           auctions={inactiveAuctions}
           emptyMessage="No inactive auctions"
+          clickable={false}
         />
       </main>
     </div>

@@ -1,7 +1,9 @@
 import type { Auction } from '@auction-platform/shared/domain';
+import { useNavigate } from 'react-router-dom';
 
 interface AuctionsListViewProps {
   auctions: Auction[];
+  clickable?: boolean;
 }
 
 function formatCentsToEth(cents: number): string {
@@ -17,11 +19,17 @@ function formatEndTime(endTimeUtc: Date): string {
   }).toUpperCase();
 }
 
-export default function AuctionsListView({ auctions }: AuctionsListViewProps) {
+export default function AuctionsListView({ auctions, clickable = true }: AuctionsListViewProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="auction-grid">
       {auctions.map((auction) => (
-        <div key={auction.auctionId} className="auction-card card">
+        <div
+          key={auction.auctionId}
+          className={`auction-card card${clickable ? ' auction-card--clickable' : ''}`}
+          onClick={clickable ? () => navigate(`/auction/${auction.auctionId}`) : undefined}
+        >
           <h3 className="title auction-card__title">{auction.title}</h3>
           <p className="body auction-card__description">{auction.description}</p>
 
@@ -29,7 +37,7 @@ export default function AuctionsListView({ auctions }: AuctionsListViewProps) {
             <div className="auction-card__meta-item">
               <span className="label">Current Price</span>
               <span className="auction-card__price">
-                {formatCentsToEth(auction.startingPriceCents)} ETH
+                ${formatCentsToEth(auction.startingPriceCents)}
               </span>
             </div>
             <div className="auction-card__meta-item">
@@ -37,20 +45,8 @@ export default function AuctionsListView({ auctions }: AuctionsListViewProps) {
               <span className="auction-card__date">
                 {formatEndTime(auction.endTimeUtc)}
               </span>
+              {clickable && <span className="auction-card__arrow">&rarr;</span>}
             </div>
-          </div>
-
-          <div className="auction-card__bid-row">
-            <input
-              className="input-field auction-card__bid-input"
-              type="number"
-              step="0.01"
-              placeholder={formatCentsToEth(auction.startingPriceCents + 1)}
-              readOnly
-            />
-            <button className="btn btn-primary auction-card__bid-btn" type="button">
-              BID
-            </button>
           </div>
         </div>
       ))}
