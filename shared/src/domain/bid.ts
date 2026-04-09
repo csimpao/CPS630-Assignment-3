@@ -6,6 +6,7 @@ export interface Bid {
   bidId: number;
   auctionId: Auction['auctionId'];
   userId: User['userId'];
+  userName?: string;
   bidInCents: number;
   bidTimeUtc: Date;
 }

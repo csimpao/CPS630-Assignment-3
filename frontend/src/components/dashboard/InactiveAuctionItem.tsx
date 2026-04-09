@@ -32,7 +32,7 @@ export default function InactiveAuctionItem({
         <div className="auction-card__meta-item">
           <span className="label">Sold Price</span>
           <span className="auction-card__price">
-            {formatCentsToEth(soldPriceCents)} ETH
+            ${formatCentsToEth(soldPriceCents)}
           </span>
         </div>
         <div className="auction-card__meta-item">

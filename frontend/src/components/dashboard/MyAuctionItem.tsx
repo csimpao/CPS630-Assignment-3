@@ -4,6 +4,7 @@ interface MyAuctionItemProps {
   previousBidCents: number;
   currentPriceCents: number;
   endTimeUtc: Date;
+  onClick?: () => void;
 }
 
 function formatCentsToEth(cents: number): string {
@@ -31,9 +32,10 @@ export default function MyAuctionItem({
   previousBidCents,
   currentPriceCents,
   endTimeUtc,
+  onClick,
 }: MyAuctionItemProps) {
   return (
-    <div className="auction-card card">
+    <div className="auction-card auction-card--clickable card" onClick={onClick}>
       <h3 className="title auction-card__title">{title}</h3>
       <p className="body auction-card__description">{description}</p>
 
@@ -41,13 +43,13 @@ export default function MyAuctionItem({
         <div className="auction-card__meta-item">
           <span className="label">Your Previous Bid</span>
           <span className="auction-card__price">
-            {formatCentsToEth(previousBidCents)} ETH
+            ${formatCentsToEth(previousBidCents)}
           </span>
         </div>
         <div className="auction-card__meta-item">
           <span className="label">Current Price</span>
           <span className="auction-card__price">
-            {formatCentsToEth(currentPriceCents)} ETH
+            ${formatCentsToEth(currentPriceCents)}
           </span>
         </div>
       </div>
@@ -58,20 +60,8 @@ export default function MyAuctionItem({
           <span className="auction-card__date">
             {formatEndTime(endTimeUtc)}
           </span>
+          <span className="auction-card__arrow">&rarr;</span>
         </div>
-      </div>
-
-      <div className="auction-card__bid-row">
-        <input
-          className="input-field auction-card__bid-input"
-          type="number"
-          step="0.01"
-          placeholder={formatCentsToEth(currentPriceCents + 1)}
-          readOnly
-        />
-        <button className="btn btn-primary auction-card__bid-btn" type="button">
-          BID
-        </button>
       </div>
     </div>
   );
