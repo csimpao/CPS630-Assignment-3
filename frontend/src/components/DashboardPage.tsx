@@ -20,7 +20,9 @@ export default function DashboardPage() {
     api.searchAuctions({ active: false }).then(setInactiveAuctions);
   }, []);
 
-  const participatedAuctions = user?.participatedAuctions ?? [];
+  const participatedAuctions = [...(user?.participatedAuctions ?? [])].sort(
+    (a, b) => Number(b.active) - Number(a.active),
+  );
 
   return (
     <div className="dashboard">

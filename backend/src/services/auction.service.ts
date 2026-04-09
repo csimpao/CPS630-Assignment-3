@@ -95,7 +95,17 @@ export class MongoAuctionService implements AuctionService {
   ): Promise<AuctionWithBids | null> {
     const doc = await AuctionModel.findOne({ auctionId });
     if (!doc) return null;
-    return docToAuctionWithBids(doc);
+
+    const auction = docToAuctionWithBids(doc);
+    const userIds = [...new Set(auction.bids.map((b) => b.userId))];
+    if (userIds.length > 0) {
+      const users = await UserModel.find({ userId: { $in: userIds } });
+      const nameMap = new Map(users.map((u) => [u.userId, u.name]));
+      for (const bid of auction.bids) {
+        bid.userName = nameMap.get(bid.userId);
+      }
+    }
+    return auction;
   }
 
   public async processAuctionClosure(
@@ -128,6 +138,7 @@ export class MongoAuctionService implements AuctionService {
       bidId,
       auctionId,
       userId,
+      userName: user.name,
       bidInCents,
       bidTimeUtc: new Date(),
     };

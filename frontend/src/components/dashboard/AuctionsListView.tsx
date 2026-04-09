@@ -34,25 +34,25 @@ export default function AuctionsListView({ auctions, clickable = true }: Auction
       {auctions.map((auction) => (
         <div
           key={auction.auctionId}
-          className={`auction-card card${clickable ? ' auction-card--clickable' : ''}`}
-          onClick={clickable ? () => navigate(`/auction/${auction.auctionId}`) : undefined}
+          className={`auction-card card${!auction.active ? ' auction-card--inactive' : clickable ? ' auction-card--clickable' : ''}`}
+          onClick={clickable && auction.active ? () => navigate(`/auction/${auction.auctionId}`) : undefined}
         >
           <h3 className="title auction-card__title">{auction.title}</h3>
           <p className="body auction-card__description">{auction.description}</p>
 
           <div className="auction-card__meta">
             <div className="auction-card__meta-item">
-              <span className="label">Current Price</span>
+              <span className="label">{auction.active ? 'Current Price' : 'Sold Price'}</span>
               <span className="auction-card__price">
                 ${formatCentsToEth(getCurrentPrice(auction))}
               </span>
             </div>
             <div className="auction-card__meta-item">
-              <span className="label">Ends</span>
+              <span className="label">{auction.active ? 'Ends' : 'Ended'}</span>
               <span className="auction-card__date">
                 {formatEndTime(auction.endTimeUtc)}
               </span>
-              {clickable && <span className="auction-card__arrow">&rarr;</span>}
+              {clickable && auction.active && <span className="auction-card__arrow">&rarr;</span>}
             </div>
           </div>
         </div>

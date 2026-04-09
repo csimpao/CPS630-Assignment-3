@@ -182,7 +182,7 @@ export default function AuctionRoomView() {
                   ${formatCentsToEth(bid.bidInCents)}
                 </span>
                 <span className="body auction-room__bid-user">
-                  User #{bid.userId}
+                  {bid.userName ?? `User #${bid.userId}`}
                 </span>
                 <span className="body auction-room__bid-time">
                   {formatDateTime(bid.bidTimeUtc)}
