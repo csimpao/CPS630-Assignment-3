@@ -5,19 +5,28 @@ import { useAuth } from '../providers/auth';
 import Navbar from './dashboard/Navbar';
 import AuctionSection from './dashboard/AuctionSection';
 
+const REFRESH_INTERVAL_MS = 10000;
+
 export default function DashboardPage() {
   const { api } = useApi();
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [activeAuctions, setActiveAuctions] = useState<AuctionWithBids[]>([]);
   const [inactiveAuctions, setInactiveAuctions] = useState<AuctionWithBids[]>([]);
   const [lastFetchedAt, setLastFetchedAt] = useState<Date | null>(null);
 
-  useEffect(() => {
+  function fetchAll() {
     api.searchAuctions({ active: true }).then((auctions) => {
       setActiveAuctions(auctions);
       setLastFetchedAt(new Date());
     });
     api.searchAuctions({ active: false }).then(setInactiveAuctions);
+    api.getUserInfo().then(setUser);
+  }
+
+  useEffect(() => {
+    fetchAll();
+    const interval = setInterval(fetchAll, REFRESH_INTERVAL_MS);
+    return () => clearInterval(interval);
   }, []);
 
   const participatedAuctions = [...(user?.participatedAuctions ?? [])].sort(
