@@ -64,6 +64,7 @@ export default function CreateAuction({ isClicked, onClose }: CreateAuctionProps
                     <form onSubmit={handleSubmit}>
                         <input
                             type="text"
+                            className="input-field modal__amount-input"
                             placeholder="Set Item Name:"
                             value={title}
                             onChange={(e) => setName(e.target.value)}
@@ -71,6 +72,7 @@ export default function CreateAuction({ isClicked, onClose }: CreateAuctionProps
 
                         <input
                             type="text"
+                            className="input-field modal__amount-input"
                             placeholder="Set Item Description:"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
@@ -78,6 +80,7 @@ export default function CreateAuction({ isClicked, onClose }: CreateAuctionProps
 
                         <input
                             type="number"
+                            className="input-field modal__amount-input"
                             placeholder="Set Item Price:"
                             value={startingPriceCents}
                             onChange={(e) => setStartingPrice(Number(e.target.value))}
@@ -85,6 +88,7 @@ export default function CreateAuction({ isClicked, onClose }: CreateAuctionProps
 
                         <input
                             type="datetime-local"
+                            className="input-field modal__amount-input"
                             placeholder="Set End Bidding Date:"
                             value={endTimeUtc}
                             onChange={(e) => setEndTime(new Date(e.target.value))}
