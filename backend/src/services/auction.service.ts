@@ -122,19 +122,19 @@ export class MongoAuctionService implements AuctionService {
 
     const doc = await AuctionModel.findOne({ auctionId });
     if (!doc) {
-      return null;
+      throw new Error('Could not find auction');
     }
 
     const lastBid =
       doc.bids.length > 0 ? doc.bids[doc.bids.length - 1] : undefined;
     const floor = lastBid ? lastBid.bidInCents : doc.startingPriceCents;
     if (bidInCents <= floor) {
-      return null;
+      throw new Error('Bid value insufficient');
     }
 
     const user = await UserModel.findOne({ userId });
     if (!user || user.balanceInCents < bidInCents) {
-      return null;
+      throw new Error('User does not have sufficient balance');
     }
 
     const bidId = auctionId * 1_000_000 + doc.bids.length + 1;
