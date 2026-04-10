@@ -78,6 +78,10 @@ following pages:
 - **BalancePage** (`frontend/src/components/BalancePage.tsx`) — Allows users to view
   and add funds to their account balance.
 
+- **FilterAuction** (`frontend/src/components/FilterAuction.tsx`) — A modal dialog
+  that allows users to search and filter auctions by name, active/inactive status,
+  and price range (min/max in dollars). Results are displayed within the modal. Active auction cards are clickable to navigate directly into the auction room.
+
 Supporting dashboard components live in `frontend/src/components/dashboard/` and include
 `AuctionItem`, `MyAuctionItem`, `InactiveAuctionItem`, `Navbar`, `SearchAuctions`,
 `AddBalanceModal`, `StatusBadge`, and `EmptyState`.
@@ -122,7 +126,10 @@ a layered architecture: **Models -> Services -> Handlers**.
 **REST Handlers** (`backend/src/handlers/rest/`):
 - `POST /auth/signup` and `POST /auth/login` — Authentication endpoints.
 - `GET /me` and `PATCH /me/balance` — User profile and wallet operations.
-- `POST /auctions` and `GET /auctions` — Auction creation and search.
+- `POST /auctions` and `GET /auctions` — Auction creation and search/filter.
+  The `GET /auctions` endpoint accepts optional query parameters: `query` (text search
+  on title/description), `active` (boolean), `minPriceInCents`, and `maxPriceInCents`
+  for filtering by current price range.
 - `middleware.ts` — JWT auth middleware (`requireAuth`), Zod schema validation
   (`validate`), and a global error handler.
 
@@ -139,8 +146,7 @@ and contains code used by both the frontend and backend:
 - **Domain types** (`shared/src/domain/`) — TypeScript interfaces for `Auction`, `User`,
   `Bid`, and Socket.io event contracts (`ClientToServerEvents`, `ServerToClientEvents`).
 - **Validation schemas** (`shared/src/schemas/`) — Zod schemas for auction creation,
-  user signup/login, bid parameters, and search filters. These are used on the backend
-  for request validation and on the frontend for form validation.
+  user signup/login, bid parameters, and search filters. These are used on the backend for request validation and on the frontend for form validation.
 
 ## Overview/Reflection
 
@@ -154,6 +160,28 @@ and test each service individually. The service interfaces allowed us to swap re
 On the frontend, the provider pattern (AuthProvider and ApiContextProvider) gave every
 component access to authentication state and backend operations through simple hooks. This meant individual page components could focus on rendering and user interaction. React Router handles client-side navigation.
 
+### Auction Filtering and Search
+
+The platform includes a filtering system accessible from the dashboard. Users can
+filter auctions using the following criteria:
+
+- **Item Name** — Text search that matches against auction titles and descriptions
+  using case-insensitive regex matching on the backend.
+- **Active / Inactive Status** — Two independent checkboxes allow filtering by auction
+  status. At least one must be selected. Selecting both returns all auctions regardless
+  of status.
+- **Price Range** — Optional minimum and maximum price inputs in dollars. Values are
+  converted to cents on the frontend before being sent to the API. The backend filters
+  auctions by their current price (latest bid or starting price if no bids exist).
+
+Client-side validation ensures:
+- At least one filter criterion is provided before submitting.
+- Min price cannot exceed max price when both are specified.
+
+Filtered results are displayed inline within the modal. Active auction results are
+clickable and navigate to the auction room; inactive results are displayed but not
+clickable.
+
 ### Successes
 
 - Ensuring real-time two-way communication between the client and server during live auctions
@@ -161,6 +189,7 @@ component access to authentication state and backend operations through simple h
 - Real-time socket events are persisted to MongoDB on every bid
 - Implemented authentication across both the REST API and WebSocket connections
 - Working in iterations as a group to break the project into manageable phases (authentication, auction CRUD, real-time bidding, UI polish)
+- Implemented a flexible auction filtering system with server-side query support and client-side validation
 
 ### Challenges
 
@@ -169,3 +198,4 @@ promptly required management auction room subscriptions and state synchronizatio
 - Organizing package dependencies across multiple devices for testing was difficult because different workspaces caused some install failures
 - Testing socket communication revealed edge cases that were not obvious right away
 - Delegating tasks across group members while ensuring everyone had a meaningful role
+- Ensuring the filter validation schema accepted valid edge cases (e.g., zero-value prices) while rejecting invalid inputs required iteration on the Zod schemas
