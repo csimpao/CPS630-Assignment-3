@@ -29,7 +29,7 @@ export function leaveAuction(
       };
       cb(response);
     } catch (err) {
-      console.log(`leaveAuction: Failed to leave auction rooms: ${err}`);
+      console.error(`leaveAuction: Failed to leave auction rooms: ${err}`);
       const response: AuctionLeaveResponse = {
         status: 'error',
         payload: null,
