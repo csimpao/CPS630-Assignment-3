@@ -9,7 +9,7 @@ import type { ApiActions, ApiProvider } from '../../types/api';
 import type {
   ServerToClientEvents,
   ClientToServerEvents,
-} from '../../../../shared/dist/socket';
+} from '@auction-platform/shared/domain';
 
 const ErrTimeout = new Error('Server did not respond in time');
 
@@ -24,8 +24,9 @@ export interface UseSocketApiReturn {
 export const useSocketApi = (
   socket: Socket<ServerToClientEvents, ClientToServerEvents>,
 ): UseSocketApiReturn => {
-  const [isSocketConnected, setIsSocketConnected] =
-    useState<ApiProvider['isSocketConnected']>(socket.connected);
+  const [isSocketConnected, setIsSocketConnected] = useState<
+    ApiProvider['isSocketConnected']
+  >(socket.connected ?? false);
   const [currentAuctionId, setCurrentAuctionId] =
     useState<ApiProvider['currentAuctionId']>(null);
   const [currentAuction, setCurrentAuction] =
