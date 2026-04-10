@@ -133,6 +133,11 @@ body {
   filter: invert(1);
 }
 
+.input-field::-ms-reveal,
+.input-field::-webkit-credentials-auto-fill-button {
+  filter: invert(1);
+}
+
 /* ── Auth Layout ───────────────────────────────────────────── */
 .auth-page {
   min-height: 100vh;
