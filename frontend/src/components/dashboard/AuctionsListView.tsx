@@ -14,7 +14,7 @@ function getCurrentPrice(auction: Auction | AuctionWithBids): number {
 }
 
 function formatCentsToEth(cents: number): string {
-  return (cents / 100).toFixed(2);
+  return Math.round(cents / 100).toLocaleString('en-US');
 }
 
 function formatEndTime(endTimeUtc: Date): string {

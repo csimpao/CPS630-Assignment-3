@@ -56,7 +56,7 @@ export default function DashboardPage() {
         />
 
         <AuctionSection
-          title="INACTIVE AUCTIONS"
+          title="ARCHIVED AUCTIONS"
           badgeLabel="CONCLUDED"
           badgeVariant="concluded"
           auctions={inactiveAuctions}

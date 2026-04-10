@@ -11,7 +11,6 @@ export default function FilterAuction({ isClicked, onClose }: FilterAuctionProps
     const { api } = useApi();
     const navigate = useNavigate();
     const [query, setQuery] = useState<string | undefined>();
-    const [activeChecked, setActiveChecked] = useState(false);
     const [inactiveChecked, setInactiveChecked] = useState(false);
     const [minPriceInCents, setMinPrice] = useState<number | undefined>();
     const [maxPriceInCents, setMaxPrice] = useState<number | undefined>();
@@ -32,7 +31,7 @@ export default function FilterAuction({ isClicked, onClose }: FilterAuctionProps
         const hasMin = minPriceInCents !== undefined;
         const hasMax = maxPriceInCents !== undefined;
 
-        if (!activeChecked && !inactiveChecked && !hasQuery && !hasMin && !hasMax) {
+        if (!hasQuery && !hasMin && !hasMax && !inactiveChecked) {
             setErr("Please fill in at least one filter field");
             return;
         }
@@ -42,10 +41,7 @@ export default function FilterAuction({ isClicked, onClose }: FilterAuctionProps
             return;
         }
 
-        // Both checked = no active filter; one checked = filter by that status
-        const active = (activeChecked && inactiveChecked)
-            ? undefined
-            : activeChecked ? true : false;
+        const active = inactiveChecked ? undefined : true;
 
         setIsSubmitting(true);
         const queryParams = {
@@ -91,7 +87,7 @@ export default function FilterAuction({ isClicked, onClose }: FilterAuctionProps
         if (minPriceInCentsInput === "") return;
         const dollars = parseFloat(minPriceInCentsInput) || 0;
         const cents = Math.max(1, Math.round(dollars * 100));
-        setMinPriceInput((cents / 100).toFixed(2));
+        setMinPriceInput(Math.round(cents / 100).toString());
         setMinPrice(cents);
     }
 
@@ -99,13 +95,12 @@ export default function FilterAuction({ isClicked, onClose }: FilterAuctionProps
         if (maxPriceInCentsInput === "") return;
         const dollars = parseFloat(maxPriceInCentsInput) || 0;
         const cents = Math.max(1, Math.round(dollars * 100));
-        setMaxPriceInput((cents / 100).toFixed(2));
+        setMaxPriceInput(Math.round(cents / 100).toString());
         setMaxPrice(cents);
     }
 
     function handleCancel() {
         setQuery(undefined);
-        setActiveChecked(false);
         setInactiveChecked(false);
         setMinPrice(undefined);
         setMaxPrice(undefined);
@@ -145,16 +140,7 @@ export default function FilterAuction({ isClicked, onClose }: FilterAuctionProps
 
                 <div className="modal__quick-add">
                     <label>
-                        Active:
-                        <input
-                            type="checkbox"
-                            checked={activeChecked}
-                            onChange={() => setActiveChecked(!activeChecked)}
-                            style={{ marginLeft: '0.5rem' }}
-                        />
-                    </label>
-                    <label style={{ marginLeft: '1rem' }}>
-                        Inactive:
+                        Also search Archived:
                         <input
                             type="checkbox"
                             checked={inactiveChecked}
@@ -203,7 +189,7 @@ export default function FilterAuction({ isClicked, onClose }: FilterAuctionProps
                                     <div className="auction-card__meta">
                                         <div className="auction-card__meta-item">
                                             <span className="label">Price</span>
-                                            <span className="auction-card__price">${(currentPrice / 100).toFixed(2)}</span>
+                                            <span className="auction-card__price">${Math.round(currentPrice / 100).toLocaleString('en-US')}</span>
                                         </div>
                                         <div className="auction-card__meta-item">
                                             <span className="label">Status</span>
