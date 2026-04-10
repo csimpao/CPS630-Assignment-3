@@ -53,25 +53,20 @@ export default function AuctionRoomView() {
       : currentAuction?.startingPriceCents ?? 0;
   const minimumBidCents = currentPrice + 1;
   const minimumBidAmount = formatCentsToEth(minimumBidCents);
-
-  const handleBidInputFocus = () => {
-    if (bidAmount === '') {
-      setBidAmount(minimumBidAmount);
-    }
-  };
+  const suggestedBidAmount = formatCentsToEth(currentPrice + 100);
 
   const handleBidInputBlur = () => {
     if (bidAmount === '') return;
 
     const parsedBid = parseFloat(bidAmount);
     if (isNaN(parsedBid)) {
-      setBidAmount(minimumBidAmount);
+      setBidAmount('');
       return;
     }
 
     const minimumBid = minimumBidCents / 100;
     if (parsedBid < minimumBid) {
-      setBidAmount(minimumBidAmount);
+      setBidAmount('');
     }
   };
 
@@ -79,7 +74,7 @@ export default function AuctionRoomView() {
     setError(null);
     const bidInCents = Math.round(parseFloat(bidAmount) * 100);
     if (isNaN(bidInCents) || bidInCents < minimumBidCents) {
-      setError(`Bid must be at least $${minimumBidAmount}`);
+      setError('Bid must be $1 more than the Current Price.');
       return;
     }
     try {
@@ -151,9 +146,8 @@ export default function AuctionRoomView() {
               type="number"
               step="0.01"
               min={minimumBidAmount}
-              placeholder={`$${minimumBidAmount}`}
+              placeholder={`Minimum Bid: $${suggestedBidAmount}`}
               value={bidAmount}
-              onFocus={handleBidInputFocus}
               onBlur={handleBidInputBlur}
               onChange={(e) => setBidAmount(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleBid()}
