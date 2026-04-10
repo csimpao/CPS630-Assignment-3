@@ -152,13 +152,13 @@ and contains code used by both the frontend and backend:
 
 Please see `startup_guide.md` on how to run the project.
 
-Our team built a real-time auction platform to meet the assignment requirements: authentication, form creation, live bidding, and result viewing.
-
-On the backend, the repository pattern and layer architecture allowed us to develop
-and test each service individually. The service interfaces allowed us to swap real implementation for mock test services during our development. The queue service handles auction lifecycle automatically. The Socket.io rooms keep all connected users in sync without polling.
+As mentioned above, the repository pattern and layer architecture allowed us to develop
+and test each service individually in the backend. The service interfaces allowed us to swap real implementation for mock test services during our development. The queue service handles auction lifecycle automatically. The Socket.io rooms keep all connected users in sync without polling.
 
 On the frontend, the provider pattern (AuthProvider and ApiContextProvider) gave every
 component access to authentication state and backend operations through simple hooks. This meant individual page components could focus on rendering and user interaction. React Router handles client-side navigation.
+
+Some additional security considerations were made with a full auth system, cors configuration, and the use of helmet.
 
 ### Auction Filtering and Search
 
