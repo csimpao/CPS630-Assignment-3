@@ -155,6 +155,15 @@ export class MongoAuctionService implements AuctionService {
         $inc: { balanceInCents: -bidInCents },
       },
     );
+    // refund previous bidder
+    if (lastBid) {
+      await UserModel.updateOne(
+        { userId: lastBid.userId },
+        {
+          $inc: { balanceInCents: lastBid.bidInCents },
+        },
+      );
+    }
 
     return bid;
   }
