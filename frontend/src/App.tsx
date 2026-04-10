@@ -15,7 +15,7 @@ import type {
   ServerToClientEvents,
 } from '@auction-platform/shared/domain';
 
-const BACKEND_URL = import.meta.env.BACKEND_URL || 'http://localhost:3000';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
 function AuthenticatedApp() {
   const { token } = useAuth();
