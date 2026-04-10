@@ -13,7 +13,7 @@ import AuctionRoomView from './components/AuctionRoomView';
 import type {
   ClientToServerEvents,
   ServerToClientEvents,
-} from '../../shared/dist/socket';
+} from '@auction-platform/shared/domain';
 
 const BACKEND_URL = import.meta.env.BACKEND_URL || 'http://localhost:3000';
 
@@ -46,8 +46,14 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/login" element={user ? <Navigate to="/" replace /> : <LoginPage />} />
-      <Route path="/signup" element={user ? <Navigate to="/" replace /> : <SignupPage />} />
+      <Route
+        path="/login"
+        element={user ? <Navigate to="/" replace /> : <LoginPage />}
+      />
+      <Route
+        path="/signup"
+        element={user ? <Navigate to="/" replace /> : <SignupPage />}
+      />
       <Route
         path="*"
         element={user ? <AuthenticatedApp /> : <Navigate to="/login" replace />}
