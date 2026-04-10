@@ -75,8 +75,11 @@ export class MongoAuctionService implements AuctionService {
     const docs = await AuctionModel.find(filter);
 
     const filteredByPrice = docs.filter((doc) => {
-      const lastBid = doc.bids.length > 0 ? doc.bids[doc.bids.length - 1] : undefined;
-      const currentPrice = lastBid ? lastBid.bidInCents : doc.startingPriceCents;
+      const lastBid =
+        doc.bids.length > 0 ? doc.bids[doc.bids.length - 1] : undefined;
+      const currentPrice = lastBid
+        ? lastBid.bidInCents
+        : doc.startingPriceCents;
 
       if (minPriceInCents !== undefined && currentPrice < minPriceInCents) {
         return false;
@@ -102,7 +105,7 @@ export class MongoAuctionService implements AuctionService {
       const users = await UserModel.find({ userId: { $in: userIds } });
       const nameMap = new Map(users.map((u) => [u.userId, u.name]));
       for (const bid of auction.bids) {
-        bid.userName = nameMap.get(bid.userId);
+        bid.userName = nameMap.get(bid.userId) ?? 'Invalid Name';
       }
     }
     return auction;
@@ -122,7 +125,8 @@ export class MongoAuctionService implements AuctionService {
       return null;
     }
 
-    const lastBid = doc.bids.length > 0 ? doc.bids[doc.bids.length - 1] : undefined;
+    const lastBid =
+      doc.bids.length > 0 ? doc.bids[doc.bids.length - 1] : undefined;
     const floor = lastBid ? lastBid.bidInCents : doc.startingPriceCents;
     if (bidInCents <= floor) {
       return null;

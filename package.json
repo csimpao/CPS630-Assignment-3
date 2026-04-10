@@ -1,11 +1,8 @@
 {
-    "private": true,
-    "workspaces": [
-        "shared",
-        "frontend",
-        "backend"
-    ],
-    "dependencies": {
-        "@rolldown/binding-win32-x64-msvc": "^1.0.0-rc.13"
-    }
+  "private": true,
+  "workspaces": [
+    "shared",
+    "frontend",
+    "backend"
+  ]
 }
