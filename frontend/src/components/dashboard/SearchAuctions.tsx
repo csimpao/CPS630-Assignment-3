@@ -1,4 +1,8 @@
+import { useState } from 'react';
+import FilterAuction from '../FilterAuction';
+
 export default function SearchAuctions() {
+  const [isClicked, setIsClicked] = useState(false);
   return (
     <div className="navbar__search">
       <svg
@@ -18,8 +22,10 @@ export default function SearchAuctions() {
       <input
         className="input-field navbar__search-input"
         type="text"
+        onClick={() => setIsClicked(true)}
         placeholder="FILTER AUCTIONS..."
       />
+      <FilterAuction isClicked={isClicked} onClose={() => setIsClicked(false)}/>
     </div>
   );
 }
