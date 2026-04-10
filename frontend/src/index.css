@@ -129,6 +129,10 @@ body {
   border-color: var(--color-outline-focus);
 }
 
+.input-field::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
 /* ── Auth Layout ───────────────────────────────────────────── */
 .auth-page {
   min-height: 100vh;
