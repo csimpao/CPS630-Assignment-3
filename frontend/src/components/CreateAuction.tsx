@@ -6,12 +6,39 @@ interface CreateAuctionProps {
   onClose: () => void;
 }
 
+function getDefaultEndTime(): Date {
+    const d = new Date();
+    d.setHours(d.getHours() + 24);
+    return d;
+}
+
+function toDatetimeLocal(date: Date): string {
+    const offset = date.getTimezoneOffset();
+    const local = new Date(date.getTime() - offset * 60000);
+    return local.toISOString().slice(0, 16);
+}
+
 export default function CreateAuction({ isClicked, onClose }: CreateAuctionProps) {
     const { api } = useApi();
     const [title, setName] = useState("");
     const [description, setDescription] = useState("");
     const [startingPriceCents, setStartingPrice] = useState(0);
-    const [endTimeUtc, setEndTime] = useState(new Date("December 31, 2026 23:59:00"));
+    const [priceInput, setPriceInput] = useState("");
+
+    function handlePriceChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const val = e.target.value.replace(/[^0-9.]/g, '');
+        setPriceInput(val);
+        const dollars = parseFloat(val) || 0;
+        setStartingPrice(Math.round(dollars * 100));
+    }
+
+    function handlePriceBlur() {
+        if (priceInput === "") return;
+        const dollars = parseFloat(priceInput) || 0;
+        setPriceInput(dollars.toFixed(2));
+        setStartingPrice(Math.round(dollars * 100));
+    }
+    const [endTimeUtc, setEndTime] = useState(getDefaultEndTime);
     const [err, setErr] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -19,18 +46,21 @@ export default function CreateAuction({ isClicked, onClose }: CreateAuctionProps
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-
+        setErr("");
+        setIsSubmitting(true);
         try {
             await api.createAuction({title, description, startingPriceCents, endTimeUtc});
             alert("Auction created!!");
-            setIsSubmitting(true);
             setName("");
             setDescription("");
             setStartingPrice(0);
-            setEndTime(new Date("December 31, 2026 23:59:00"));
+            setPriceInput("");
+            setEndTime(getDefaultEndTime());
             onClose();
         } catch (err) {
             setErr("Failed to create an auction");
+        } finally {
+            setIsSubmitting(false);
         }
     }
 
@@ -38,7 +68,8 @@ export default function CreateAuction({ isClicked, onClose }: CreateAuctionProps
         setName("");
         setDescription("");
         setStartingPrice(0);
-        setEndTime(new Date("December 31, 2026 23:59:00"));
+        setPriceInput("");
+        setEndTime(getDefaultEndTime());
         onClose();
     }
 
@@ -58,14 +89,14 @@ export default function CreateAuction({ isClicked, onClose }: CreateAuctionProps
                     </button>
                 </div>
 
-                <label className="label">Put in an item you want to auction!!</label>
+                <label className="label">Please detail your auction</label>
 
                 <div className="modal__quick-add">
                     <form onSubmit={handleSubmit}>
                         <input
                             type="text"
                             className="input-field modal__amount-input"
-                            placeholder="Set Item Name:"
+                            placeholder="Item Name:"
                             value={title}
                             onChange={(e) => setName(e.target.value)}
                         />
@@ -73,26 +104,29 @@ export default function CreateAuction({ isClicked, onClose }: CreateAuctionProps
                         <input
                             type="text"
                             className="input-field modal__amount-input"
-                            placeholder="Set Item Description:"
+                            placeholder="Description:"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
 
                         <input
-                            type="number"
+                            type="text"
                             className="input-field modal__amount-input"
-                            placeholder="Set Item Price:"
-                            value={startingPriceCents}
-                            onChange={(e) => setStartingPrice(Number(e.target.value))}
+                            placeholder="$0.00"
+                            value={priceInput}
+                            onChange={handlePriceChange}
+                            onBlur={handlePriceBlur}
                         />
 
                         <input
                             type="datetime-local"
                             className="input-field modal__amount-input"
                             placeholder="Set End Bidding Date:"
-                            value={endTimeUtc}
+                            value={toDatetimeLocal(endTimeUtc)}
                             onChange={(e) => setEndTime(new Date(e.target.value))}
                         />
+
+                        {err && <p className="modal__error">{err}</p>}
 
                         <button
                             className="btn btn-primary btn-full modal__confirm"
