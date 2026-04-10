@@ -47,10 +47,16 @@ export default function CreateAuction({ isClicked, onClose }: CreateAuctionProps
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setErr("");
+
+        const hoursUntilEnd = (endTimeUtc.getTime() - Date.now()) / (1000 * 60 * 60);
+        if (hoursUntilEnd < 1) {
+            setErr("Auction must run for at least 1 hour.");
+            return;
+        }
+
         setIsSubmitting(true);
         try {
             await api.createAuction({title, description, startingPriceCents, endTimeUtc});
-            alert("Auction created!!");
             setName("");
             setDescription("");
             setStartingPrice(0);

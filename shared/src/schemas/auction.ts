@@ -6,10 +6,10 @@ export const AuctionCreateSchema = z.object({
   startingPriceCents: z.number().int().min(1),
   endTimeUtc: z.coerce.date().refine(
     (date) => {
-      const sixHoursFromNow = new Date(Date.now() + 6 * 60 * 60 * 1000);
-      return date >= sixHoursFromNow;
+      const oneHourFromNow = new Date(Date.now() + 1 * 60 * 60 * 1000);
+      return date >= oneHourFromNow;
     },
-    { message: 'Auction must last at least 6 hours' },
+    { message: 'Auction must last at least 1 hour' },
   ),
 });
 

@@ -12,12 +12,12 @@ export default function DashboardPage() {
   const { user, setUser } = useAuth();
   const [activeAuctions, setActiveAuctions] = useState<AuctionWithBids[]>([]);
   const [inactiveAuctions, setInactiveAuctions] = useState<AuctionWithBids[]>([]);
-  const [lastFetchedAt, setLastFetchedAt] = useState<Date | null>(null);
+  const [lastUpdatedAt, setLastUpdatedAt] = useState<string>('');
 
   function fetchAll() {
     api.searchAuctions({ active: true }).then((auctions) => {
       setActiveAuctions(auctions);
-      setLastFetchedAt(new Date());
+      setLastUpdatedAt(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }));
     });
     api.searchAuctions({ active: false }).then(setInactiveAuctions);
     api.getUserInfo().then(setUser);
@@ -44,7 +44,7 @@ export default function DashboardPage() {
           badgeVariant="live"
           auctions={activeAuctions}
           emptyMessage="No active auctions"
-          lastFetchedAt={lastFetchedAt}
+          subtitle={lastUpdatedAt ? `Last updated at ${lastUpdatedAt}.` : undefined}
         />
 
         <AuctionSection
