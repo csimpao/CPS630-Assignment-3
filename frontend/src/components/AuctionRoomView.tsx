@@ -60,7 +60,7 @@ export default function AuctionRoomView() {
 
     if (bidAmount.includes('.')) {
       setBidAmount('');
-      setError('Bid must be a whole dollar amount with no decimals.');
+      setError('Bid must be a whole dollar amount — no decimals allowed.');
       return;
     }
 
@@ -80,13 +80,13 @@ export default function AuctionRoomView() {
     setError(null);
 
     if (bidAmount.includes('.')) {
-      setError('Bid must be a whole dollar amount with no decimals.');
+      setError('Bid must be a whole dollar amount — no decimals allowed.');
       return;
     }
 
     const bidInCents = parseInt(bidAmount, 10) * 100;
     if (isNaN(bidInCents) || bidInCents < minimumBidCents) {
-      setError('Bid must be $1 more than the Current Price.');
+      setError('Bid must be at least +$1 from the Current Price.');
       return;
     }
     try {
