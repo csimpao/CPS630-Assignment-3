@@ -10,6 +10,7 @@ This step has been omitted for the sake of convenience, the specified database i
 ```bash
 # from root directory
 cp backend/.env.sample backend/.env
+cp frontend/.env.sample frontend/.env
 ```
 
 2. Build shared packages
